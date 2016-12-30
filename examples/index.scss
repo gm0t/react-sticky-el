@@ -1,0 +1,60 @@
+html, body, .container {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+body {
+  padding: 50px 0;
+}
+
+h1, h2 {
+  margin: 0;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.column {
+  position: relative;
+  width: 20%;
+  height: 100%;
+  padding-top: 90px;
+  margin: auto;
+  box-sizing: border-box;
+
+  h1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  & .scroll-area {
+    height: 100%;
+    overflow: scroll;
+    position: relative;
+  }
+}
+
+
+.block {
+  max-width: 400px;
+  margin-bottom: 50px;
+
+  h2 {
+    background: #1D96FA;
+    line-height: 30px;
+  }
+
+  p {
+    font-size: 1.5em;
+    margin: 0;
+    background: #FF990D;
+  }
+}
