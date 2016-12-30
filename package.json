@@ -8,7 +8,7 @@
     "build": "npm run build-cjs && npm run build-dist",
     "build-cjs": "rimraf lib && BABEL_ENV=cjs babel ./src -d lib --ignore __tests__",
     "build-dist": "rimraf dist && npm run build-dist-examples && npm run build-dist-lib",
-    "build-dist-examples": "NODE_ENV=production webpack --config webpack-examples.config.js",
+    "build-dist-examples": "NODE_ENV=production webpack -p --config webpack-examples.config.js",
     "build-dist-lib": "webpack src/index.js dist/react-sticky-el.js && NODE_ENV=production webpack -p src/index.js dist/react-sticky-el.min.js --display-modules --progress",
     "start": "node examples-server.js",
     "test": "echo \"Error: no test specified\" && exit 1",

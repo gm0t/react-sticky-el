@@ -17,7 +17,7 @@ if (process.env.NODE_ENV !== 'production') {
 entry.push('./index');
 
 var plugins = baseConfig.plugins;
-plugins.push(new HtmlWebpackPlugin({template: 'index.html'}));
+plugins.push(new HtmlWebpackPlugin({template: 'index.html', inject: false}));
 
 if (process.env.NODE_ENV !== 'production') {
   plugins = plugins.concat([
