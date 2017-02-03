@@ -325,7 +325,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.scrollElement) {
 	        (0, _events.unlisten)(this.scrollElement, this.checkPosition);
 	      }
-	      (0, _events.unlisten)(window, ['resize', 'pageshow', 'load'], this.checkPosition);
+	      (0, _events.unlisten)(window, ['scroll', 'resize', 'pageshow', 'load'], this.checkPosition);
 	      this.boundaryElement = null;
 	      this.scrollElement = null;
 	      clearTimeout(this.checkPositionIntervalId);

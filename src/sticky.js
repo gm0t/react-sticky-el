@@ -132,7 +132,7 @@ export default class Sticky extends PureComponent {
       if (this.scrollElement) {
         unlisten(this.scrollElement, this.checkPosition);
       }
-      unlisten(window, ['resize', 'pageshow', 'load'], this.checkPosition);
+      unlisten(window, ['scroll', 'resize', 'pageshow', 'load'], this.checkPosition);
       this.boundaryElement = null;
       this.scrollElement = null;
       clearTimeout(this.checkPositionIntervalId);
