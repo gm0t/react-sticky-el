@@ -1,6 +1,6 @@
 {
   "name": "react-sticky-el",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Sticky component for React",
   "main": "lib/index.js",
   "jsnext:main": "es/index",
@@ -21,14 +21,14 @@
   "keywords": [
     "react",
     "reactjs",
-    "virtual",
-    "scroll",
-    "list",
-    "scrolling",
-    "infinite"
+    "sticky",
+    "fixed",
+    "react-sticky"
   ],
   "files": [
-    "lib", "es", "*.md"
+    "lib",
+    "es",
+    "*.md"
   ],
   "author": "Mikhail Bogdanov <admin@gm0.ru> (https://github.com/gm0t)",
   "license": "MIT",
@@ -51,12 +51,16 @@
     "babel-preset-es2015-loose": "^8.0.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
+    "chai": "^3.5.0",
     "css-loader": "^0.25.0",
     "express": "^4.14.0",
     "html-webpack-plugin": "^2.24.1",
+    "jsdom": "^9.10.0",
+    "mocha": "^3.2.0",
     "node-sass": "^3.13.0",
-    "react": "^15.3.2",
-    "react-dom": "^15.3.2",
+    "react": "^15.4.2",
+    "react-addons-test-utils": "^15.4.2",
+    "react-dom": "^15.4.2",
     "react-hot-loader": "^3.0.0-beta.6",
     "rimraf": "^2.5.4",
     "sass-loader": "^4.0.2",
