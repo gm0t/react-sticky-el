@@ -25,7 +25,7 @@ export default function find(selector, el) {
 
   // select by id
   if (selector[0] === '#') {
-    return window.getElementById(selector.slice(1));
+    return document.getElementById(selector.slice(1));
   }
 
   if (!matchesMethodName) {

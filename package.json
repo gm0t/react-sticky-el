@@ -1,6 +1,6 @@
 {
   "name": "react-sticky-el",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Sticky component for React",
   "main": "lib/index.js",
   "jsnext:main": "es/index",
@@ -11,7 +11,8 @@
     "build-dist-examples": "NODE_ENV=production webpack -p --config webpack-examples.config.js",
     "build-dist-lib": "webpack src/index.js dist/react-sticky-el.js && NODE_ENV=production webpack -p src/index.js dist/react-sticky-el.min.js --display-modules --progress",
     "start": "node examples-server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "BABEL_ENV=test mocha --require ./test/setup --compilers js:babel-core/register test/unit",
+    "test-watch": "BABEL_ENV=test mocha -w --require ./test/setup --compilers js:babel-core/register test/unit",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -47,6 +48,8 @@
     "babel-loader": "^6.2.5",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-react-transform": "^2.0.2",
+    "babel-plugin-rewire-exports": "^0.1.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-es2015-loose": "^8.0.0",
     "babel-preset-react": "^6.16.0",
@@ -64,6 +67,8 @@
     "react-hot-loader": "^3.0.0-beta.6",
     "rimraf": "^2.5.4",
     "sass-loader": "^4.0.2",
+    "sinon": "^1.17.7",
+    "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.3",
     "webpack-dev-middleware": "^1.8.3",

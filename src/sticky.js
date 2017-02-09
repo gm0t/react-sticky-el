@@ -1,11 +1,10 @@
 import React, {PureComponent, PropTypes} from 'react'
 import ReactDOM from 'react-dom'
-import {listen, unlisten} from './helpers/events'
+import { listen, unlisten } from './helpers/events'
 import find from './helpers/find'
 
 const stickyOwnProps = [
   'mode',
-  'inlineStyle',
   'stickyStyle',
   'stickyClassName',
   'boundaryElement',
@@ -22,7 +21,6 @@ const stickyOwnProps = [
 export default class Sticky extends PureComponent {
   static propTypes = {
     mode: PropTypes.oneOf(['top', 'bottom']),
-    inlineStyle: PropTypes.bool,
     stickyStyle: PropTypes.object,
     stickyClassName: PropTypes.string,
     boundaryElement: PropTypes.string,
@@ -45,7 +43,6 @@ export default class Sticky extends PureComponent {
     wrapperCmp: 'div',
     stickyClassName: 'sticky',
     stickyStyle: null,
-    inlineStyle: true,
     boundaryElement: null,
     scrollElement: 'window',
     topOffset: 0,
@@ -53,7 +50,6 @@ export default class Sticky extends PureComponent {
     noExceptionOnMissedScrollElement: false,
     positionRecheckInterval: 0
   }
-
 
   isFixed(holderRect, wrapperRect, boundaryRect, scrollRect) {
     const {
@@ -75,14 +71,22 @@ export default class Sticky extends PureComponent {
       && (scrollRect.bottom - wrapperRect.height - bottomOffset > boundaryRect.top);
   }
 
+  holderEl() {
+    return ReactDOM.findDOMNode(this.refs.holder);
+  }
+
+  wrapperEl() {
+    return ReactDOM.findDOMNode(this.refs.wrapper);
+  }
+
   checkPosition = () => {
     const {
       boundaryElement,
       scrollElement
     } = this;
 
-    const holderRect = this.refs.holder.getBoundingClientRect(),
-      wrapperRect = this.refs.wrapper.getBoundingClientRect(),
+    const holderRect = this.holderEl().getBoundingClientRect(),
+      wrapperRect = this.wrapperEl().getBoundingClientRect(),
       boundaryRect = boundaryElement ? getRect(boundaryElement) : {top: -Infinity, bottom: Infinity},
       scrollRect = getRect(scrollElement),
       isFixed = this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
@@ -130,7 +134,7 @@ export default class Sticky extends PureComponent {
 
   componentWillUnmount() {
       if (this.scrollElement) {
-        unlisten(this.scrollElement, this.checkPosition);
+        unlisten(this.scrollElement, ['scroll'], this.checkPosition);
       }
       unlisten(window, ['scroll', 'resize', 'pageshow', 'load'], this.checkPosition);
       this.boundaryElement = null;
@@ -169,7 +173,6 @@ export default class Sticky extends PureComponent {
     const {
       stickyClassName,
       stickyStyle,
-      inlineStyle,
       holderCmp,
       wrapperCmp,
       holderProps,
@@ -182,17 +185,16 @@ export default class Sticky extends PureComponent {
     // @see http://stackoverflow.com/questions/32875046
     let wrapperStyle = {transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)'};
     if (wrapperProps.style) {
-      wrapperStyle = {wrapperStyle, ...wrapperProps.style};
+      wrapperStyle = {...wrapperStyle, ...wrapperProps.style};
     }
 
     if (fixed) {
       wrapperProps.className += ' ' + stickyClassName;
-      if (inlineStyle) {
-        wrapperStyle = {...wrapperStyle, ...this.buildStickyStyle()};
-      }
-      if (stickyStyle) {
-        wrapperStyle = {...wrapperStyle, ...stickyStyle};
-      }
+      wrapperStyle = {
+        ...wrapperStyle,
+        ...stickyStyle,
+        ...this.buildStickyStyle()
+      };
     }
 
     holderProps.style = {...holderProps.style, minHeight: height + 'px'};
