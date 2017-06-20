@@ -1,17 +1,20 @@
-var basicSelectors = {
-  'body': document.body,
-  'window': window,
-  'document': document
-};
+var basicSelectors;
+if (typeof document !== 'undefined') {
+  baseSelectors.body = document.body;
+  baseSelectors.window = window;
+  baseSelectors.document = document;
+}
 
 var matchesMethodName = (() => {
-  const body = document.body;
-  return typeof(body.matches) === 'function' ? 'matches' :
-    typeof(body.webkitMatchesSelector) === 'function' ? 'webkitMatchesSelector': //webkit
-    typeof(body.mozMatchesSelector) === 'function' ? 'mozMatchesSelector': //mozilla
-    typeof(body.msMatchesSelector) === 'function' ? 'msMatchesSelector': //ie
-    typeof(body.oMatchesSelector) === 'function' ? 'oMatchesSelector': //old opera
-    null
+  if (typeof document !== 'undefined') {
+    const body = document.body;
+    return typeof(body.matches) === 'function' ? 'matches' :
+      typeof(body.webkitMatchesSelector) === 'function' ? 'webkitMatchesSelector': //webkit
+      typeof(body.mozMatchesSelector) === 'function' ? 'mozMatchesSelector': //mozilla
+      typeof(body.msMatchesSelector) === 'function' ? 'msMatchesSelector': //ie
+      typeof(body.oMatchesSelector) === 'function' ? 'oMatchesSelector': //old opera
+      null
+  }
 })();
 
 export default function find(selector, el) {
