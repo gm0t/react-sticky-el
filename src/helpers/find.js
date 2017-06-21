@@ -1,4 +1,4 @@
-var basicSelectors;
+var basicSelectors = {};
 if (typeof document !== 'undefined') {
   baseSelectors.body = document.body;
   baseSelectors.window = window;
