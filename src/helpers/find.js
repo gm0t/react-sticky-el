@@ -1,8 +1,8 @@
-var basicSelectors;
+var basicSelectors = {};
 if (typeof document !== 'undefined') {
-  baseSelectors.body = document.body;
-  baseSelectors.window = window;
-  baseSelectors.document = document;
+  basicSelectors.body = document.body;
+  basicSelectors.window = window;
+  basicSelectors.document = document;
 }
 
 var matchesMethodName = (() => {
