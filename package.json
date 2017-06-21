@@ -1,6 +1,6 @@
 {
   "name": "react-sticky-el",
-  "version": "1.0.3",
+  "version": "1.0.7",
   "description": "Sticky component for React",
   "main": "lib/index.js",
   "jsnext:main": "es/index",
