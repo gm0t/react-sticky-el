@@ -1,6 +1,6 @@
 react-sticky-el
 ============
-Sticky library for React. Inspired by [ReactSticky](https://github.com/captivationsoftware/react-sticky/).
+Sticky library for React.
 
 #### Demos
   - [Basic](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html)
@@ -170,9 +170,6 @@ Loot at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/exam
 #### bottomOffset _(default: 0)_
 Sticky state will be triggered when the bottom of the element is `bottomOffset` pixels from the bottom of the `scrollElement`.
 
-#### hideOnBoundaryHit _(default: true)_
-If `false` then boundaryEl should have position: relative. In this case sticky element won't disappear on reaching it's boundaries. 
-
 app.jsx
 ```js
   ...
@@ -181,6 +178,12 @@ app.jsx
   </Sticky>
   ...
 ```
+
+Loot at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example
+
+#### hideOnBoundaryHit _(default: true)_
+If `false` then boundaryEl should have position: relative. In this case sticky element won't disappear on reaching it's boundaries. 
+
 Loot at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example
 
 #### Other props
