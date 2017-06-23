@@ -1,6 +1,6 @@
 {
   "name": "react-sticky-el",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Sticky component for React",
   "main": "lib/index.js",
   "jsnext:main": "es/index",
@@ -38,8 +38,8 @@
   },
   "homepage": "https://github.com/gm0t/react-sticky-el#readme",
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0",
-    "react-dom": "^0.14.0 || ^15.0.0"
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",
@@ -61,9 +61,9 @@
     "jsdom": "^9.10.0",
     "mocha": "^3.2.0",
     "node-sass": "^3.13.0",
-    "react": "^15.4.2",
+    "react": "^0.14.0",
     "react-addons-test-utils": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react-dom": "^0.14.0",
     "react-hot-loader": "^3.0.0-beta.6",
     "rimraf": "^2.5.4",
     "sass-loader": "^4.0.2",

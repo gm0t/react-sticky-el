@@ -46,15 +46,25 @@ h1, h2 {
 .block {
   max-width: 400px;
   margin-bottom: 50px;
+  overflow: hidden;
+  position: relative;
+  .sticky {
+    z-index: 2;
+  }
 
   h2 {
-    background: #1D96FA;
+    &.header {
+      background: #577796;
+    }
+    &.footer {
+      background: #612624;
+    }
     line-height: 30px;
   }
 
   p {
     font-size: 1.5em;
     margin: 0;
-    background: #FF990D;
+    background: #BEC6D7;
   }
 }
