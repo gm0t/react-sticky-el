@@ -182,19 +182,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 	exports.default = find;
-	var basicSelectors = {
-	  'body': document.body,
-	  'window': window,
-	  'document': document
-	};
+	var basicSelectors = {};
+	if (typeof document !== 'undefined') {
+	  basicSelectors.body = document.body;
+	  basicSelectors.window = window;
+	  basicSelectors.document = document;
+	}
 
 	var matchesMethodName = function () {
-	  var body = document.body;
-	  return typeof body.matches === 'function' ? 'matches' : typeof body.webkitMatchesSelector === 'function' ? 'webkitMatchesSelector' : //webkit
-	  typeof body.mozMatchesSelector === 'function' ? 'mozMatchesSelector' : //mozilla
-	  typeof body.msMatchesSelector === 'function' ? 'msMatchesSelector' : //ie
-	  typeof body.oMatchesSelector === 'function' ? 'oMatchesSelector' : //old opera
-	  null;
+	  if (typeof document !== 'undefined') {
+	    var body = document.body;
+	    return typeof body.matches === 'function' ? 'matches' : typeof body.webkitMatchesSelector === 'function' ? 'webkitMatchesSelector' : //webkit
+	    typeof body.mozMatchesSelector === 'function' ? 'mozMatchesSelector' : //mozilla
+	    typeof body.msMatchesSelector === 'function' ? 'msMatchesSelector' : //ie
+	    typeof body.oMatchesSelector === 'function' ? 'oMatchesSelector' : //old opera
+	    null;
+	  }
 	}();
 
 	function find(selector, el) {
@@ -208,7 +211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  // select by id
 	  if (selector[0] === '#') {
-	    return window.getElementById(selector.slice(1));
+	    return document.getElementById(selector.slice(1));
 	  }
 
 	  if (!matchesMethodName) {
@@ -262,39 +265,82 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var stickyOwnProps = ['mode', 'inlineStyle', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'holderProps'];
+	var stickyOwnProps = ['mode', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'hideOnBoundaryHit', 'holderProps'];
 
-	var Sticky = function (_PureComponent) {
-	  _inherits(Sticky, _PureComponent);
+	var isEqual = function isEqual(obj1, obj2) {
+	  for (var field in obj1) {
+	    if (obj1.hasOwnProperty(field) && obj1[field] !== obj2[field]) {
+	      return false;
+	    }
+	  }
+
+	  return true;
+	};
+
+	var Sticky = function (_Component) {
+	  _inherits(Sticky, _Component);
+
+	  function Sticky(props) {
+	    _classCallCheck(this, Sticky);
+
+	    var _this = _possibleConstructorReturn(this, (Sticky.__proto__ || Object.getPrototypeOf(Sticky)).call(this, props));
+
+	    _this.createWrapperRef = function (wrapper) {
+	      _this.wrapperEl = wrapper;
+	    };
+
+	    _this.createHolderRef = function (holder) {
+	      _this.holderEl = holder;
+	    };
+
+	    _this.checkPosition = function () {
+	      var holderEl = _this.holderEl;
+	      var wrapperEl = _this.wrapperEl;
+	      var boundaryElement = _this.boundaryElement;
+	      var scrollElement = _this.scrollElement;
+
+
+	      var holderRect = holderEl.getBoundingClientRect(),
+	          wrapperRect = wrapperEl.getBoundingClientRect(),
+	          boundaryRect = boundaryElement ? getRect(boundaryElement) : { top: -Infinity, bottom: Infinity },
+	          scrollRect = getRect(scrollElement),
+	          isFixed = _this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
+
+	      _this.setState({
+	        fixed: isFixed,
+	        boundaryTop: boundaryRect.top,
+	        boundaryBottom: boundaryRect.bottom,
+	        top: scrollRect.top,
+	        bottom: scrollRect.bottom,
+	        width: holderRect.width,
+	        height: wrapperRect.height
+	      });
+	    };
+
+	    _this.state = {
+	      height: 0,
+	      fixed: false
+	    };
+	    return _this;
+	  }
 
 	  _createClass(Sticky, [{
-	    key: 'isFixed',
-	    value: function isFixed(holderRect, wrapperRect, boundaryRect, scrollRect) {
-	      var _props = this.props;
-	      var bottomOffset = _props.bottomOffset;
-	      var topOffset = _props.topOffset;
-	      var mode = _props.mode;
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nProps, nState) {
+	      var state = this.state;
+	      var props = this.props;
 
-
-	      if (boundaryRect && !instersect(boundaryRect, scrollRect, topOffset, bottomOffset)) {
-	        return false;
-	      }
-
-	      if (mode === 'top') {
-	        return holderRect.top + topOffset < scrollRect.top && scrollRect.top + wrapperRect.height + bottomOffset < boundaryRect.bottom;
-	      }
-
-	      return holderRect.bottom - topOffset > scrollRect.bottom && scrollRect.bottom - wrapperRect.height - bottomOffset > boundaryRect.top;
+	      return !isEqual(state, nState) || !isEqual(props, nProps);
 	    }
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var me = _reactDom2.default.findDOMNode(this);
-	      var _props2 = this.props;
-	      var boundaryElement = _props2.boundaryElement;
-	      var scrollElement = _props2.scrollElement;
-	      var noExceptionOnMissedScrollElement = _props2.noExceptionOnMissedScrollElement;
-	      var positionRecheckInterval = _props2.positionRecheckInterval;
+	      var _props = this.props;
+	      var boundaryElement = _props.boundaryElement;
+	      var scrollElement = _props.scrollElement;
+	      var noExceptionOnMissedScrollElement = _props.noExceptionOnMissedScrollElement;
+	      var positionRecheckInterval = _props.positionRecheckInterval;
 
 
 	      this.boundaryElement = (0, _find2.default)(boundaryElement, me);
@@ -323,62 +369,81 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      if (this.scrollElement) {
-	        (0, _events.unlisten)(this.scrollElement, this.checkPosition);
+	        (0, _events.unlisten)(this.scrollElement, ['scroll'], this.checkPosition);
 	      }
 	      (0, _events.unlisten)(window, ['scroll', 'resize', 'pageshow', 'load'], this.checkPosition);
 	      this.boundaryElement = null;
 	      this.scrollElement = null;
 	      clearTimeout(this.checkPositionIntervalId);
 	    }
-	  }]);
-
-	  function Sticky(props) {
-	    _classCallCheck(this, Sticky);
-
-	    var _this = _possibleConstructorReturn(this, (Sticky.__proto__ || Object.getPrototypeOf(Sticky)).call(this, props));
-
-	    _this.checkPosition = function () {
-	      var boundaryElement = _this.boundaryElement;
-	      var scrollElement = _this.scrollElement;
+	  }, {
+	    key: 'isFixed',
+	    value: function isFixed(holderRect, wrapperRect, boundaryRect, scrollRect) {
+	      var _props2 = this.props;
+	      var hideOnBoundaryHit = _props2.hideOnBoundaryHit;
+	      var bottomOffset = _props2.bottomOffset;
+	      var topOffset = _props2.topOffset;
+	      var mode = _props2.mode;
 
 
-	      var holderRect = _this.refs.holder.getBoundingClientRect(),
-	          wrapperRect = _this.refs.wrapper.getBoundingClientRect(),
-	          boundaryRect = boundaryElement ? getRect(boundaryElement) : { top: -Infinity, bottom: Infinity },
-	          scrollRect = getRect(scrollElement),
-	          isFixed = _this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
+	      if (boundaryRect && !instersect(boundaryRect, scrollRect, topOffset, bottomOffset)) {
+	        return false;
+	      }
 
-	      _this.setState({
-	        fixed: isFixed,
-	        top: scrollRect.top,
-	        bottom: scrollRect.bottom,
-	        width: holderRect.width,
-	        height: wrapperRect.height
-	      });
-	    };
-
-	    _this.state = {
-	      height: 0,
-	      fixed: false
-	    };
-	    return _this;
-	  }
-
-	  _createClass(Sticky, [{
-	    key: 'buildStickyStyle',
-	    value: function buildStickyStyle() {
-	      var mode = this.props.mode;
-	      var state = this.state;
-	      var style = {
-	        position: 'fixed',
-	        width: state.width
-	      };
+	      var hideOffset = hideOnBoundaryHit ? wrapperRect.height + bottomOffset : 0;
 
 	      if (mode === 'top') {
-	        style.top = state.top;
-	      } else {
-	        style.top = state.bottom - this.state.height;
+	        return holderRect.top + topOffset < scrollRect.top && scrollRect.top + hideOffset <= boundaryRect.bottom;
 	      }
+
+	      return holderRect.bottom - topOffset > scrollRect.bottom && scrollRect.bottom - hideOffset >= boundaryRect.top;
+	    }
+	  }, {
+	    key: 'buildTopStyles',
+	    value: function buildTopStyles() {
+	      var _props3 = this.props;
+	      var bottomOffset = _props3.bottomOffset;
+	      var hideOnBoundaryHit = _props3.hideOnBoundaryHit;
+	      var _state = this.state;
+	      var top = _state.top;
+	      var height = _state.height;
+	      var boundaryBottom = _state.boundaryBottom;
+
+
+	      if (hideOnBoundaryHit || top + height + bottomOffset < boundaryBottom) {
+	        return { top: top, position: 'fixed' };
+	      }
+
+	      return { bottom: bottomOffset, position: 'absolute' };
+	    }
+	  }, {
+	    key: 'buildBottomStyles',
+	    value: function buildBottomStyles() {
+	      var _props4 = this.props;
+	      var bottomOffset = _props4.bottomOffset;
+	      var hideOnBoundaryHit = _props4.hideOnBoundaryHit;
+	      var _state2 = this.state;
+	      var bottom = _state2.bottom;
+	      var height = _state2.height;
+	      var boundaryTop = _state2.boundaryTop;
+
+
+	      if (hideOnBoundaryHit || bottom - height - bottomOffset > boundaryTop) {
+	        return { top: bottom - height, position: 'fixed' };
+	      }
+
+	      return { top: bottomOffset, position: 'absolute' };
+	    }
+	  }, {
+	    key: 'buildStickyStyle',
+	    value: function buildStickyStyle() {
+	      var style = void 0;
+	      if (this.props.mode === 'top') {
+	        style = this.buildTopStyles();
+	      } else {
+	        style = this.buildBottomStyles();
+	      }
+	      style.width = this.state.width;
 
 	      return style;
 	    }
@@ -386,12 +451,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'render',
 	    value: function render() {
 	      var props = this.props;
-	      var _state = this.state;
-	      var fixed = _state.fixed;
-	      var height = _state.height;
+	      var _state3 = this.state;
+	      var fixed = _state3.fixed;
+	      var height = _state3.height;
 	      var stickyClassName = props.stickyClassName;
 	      var stickyStyle = props.stickyStyle;
-	      var inlineStyle = props.inlineStyle;
 	      var holderCmp = props.holderCmp;
 	      var wrapperCmp = props.wrapperCmp;
 	      var holderProps = props.holderProps;
@@ -404,39 +468,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // @see http://stackoverflow.com/questions/32875046
 	      var wrapperStyle = { transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' };
 	      if (wrapperProps.style) {
-	        wrapperStyle = _extends({ wrapperStyle: wrapperStyle }, wrapperProps.style);
+	        wrapperStyle = _extends({}, wrapperStyle, wrapperProps.style);
 	      }
 
 	      if (fixed) {
 	        wrapperProps.className += ' ' + stickyClassName;
-	        if (inlineStyle) {
-	          wrapperStyle = _extends({}, wrapperStyle, this.buildStickyStyle());
-	        }
-	        if (stickyStyle) {
-	          wrapperStyle = _extends({}, wrapperStyle, stickyStyle);
-	        }
+	        wrapperStyle = _extends({}, wrapperStyle, stickyStyle, this.buildStickyStyle());
 	      }
 
 	      holderProps.style = _extends({}, holderProps.style, { minHeight: height + 'px' });
-	      holderProps.ref = 'holder';
+	      holderProps.ref = this.createHolderRef;
 
 	      wrapperProps.style = wrapperStyle;
-	      wrapperProps.ref = 'wrapper';
+	      wrapperProps.ref = this.createWrapperRef;
 
 	      return _react2.default.createElement(holderCmp, holderProps, _react2.default.createElement(wrapperCmp, wrapperProps, children));
 	    }
 	  }]);
 
 	  return Sticky;
-	}(_react.PureComponent);
+	}(_react.Component);
 
 	// some helpers
 
 	Sticky.propTypes = {
 	  mode: _react.PropTypes.oneOf(['top', 'bottom']),
-	  inlineStyle: _react.PropTypes.bool,
 	  stickyStyle: _react.PropTypes.object,
 	  stickyClassName: _react.PropTypes.string,
+	  hideOnBoundaryHit: _react.PropTypes.bool,
 	  boundaryElement: _react.PropTypes.string,
 	  scrollElement: _react.PropTypes.string,
 	  bottomOffset: _react.PropTypes.number,
@@ -456,7 +515,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  wrapperCmp: 'div',
 	  stickyClassName: 'sticky',
 	  stickyStyle: null,
-	  inlineStyle: true,
+	  hideOnBoundaryHit: true,
 	  boundaryElement: null,
 	  scrollElement: 'window',
 	  topOffset: 0,

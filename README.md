@@ -170,6 +170,9 @@ Loot at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/exam
 #### bottomOffset _(default: 0)_
 Sticky state will be triggered when the bottom of the element is `bottomOffset` pixels from the bottom of the `scrollElement`.
 
+#### hideOnBoundaryHit _(default: true)_
+If `false` then boundaryEl should have position: relative. In this case sticky element won't disappear on reaching it's boundaries. 
+
 app.jsx
 ```js
   ...
