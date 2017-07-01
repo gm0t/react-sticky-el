@@ -63,10 +63,6 @@ Note that the calculation of the Sticky element's height does not currently take
 
 ### `<Sticky />` Props
 
-#### inlineStyle _(default: true)_
-
-Enable/Disable inline styles for sticky element
-
 #### mode _(default: 'top')_
 
 'top' or 'bottom' - to which side element should stick
