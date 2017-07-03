@@ -42,8 +42,8 @@ export default class Sticky extends Component {
     topOffset: PropTypes.number,
     positionRecheckInterval: PropTypes.number,
     noExceptionOnMissedScrollElement: PropTypes.bool,
-    wrapperCmp: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
-    holderCmp: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
+    wrapperCmp: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+    holderCmp: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
     holderProps: PropTypes.object
   };
 
