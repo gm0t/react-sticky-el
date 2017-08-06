@@ -1,12 +1,12 @@
 {
   "name": "react-sticky-el",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Sticky component for React",
   "main": "lib/index.js",
   "jsnext:main": "es/index",
   "scripts": {
     "build": "npm run build-cjs && npm run build-es && npm run build-dist",
-    "build-es": "rimraf lib && cross-env BABEL_ENV=es babel src --out-dir es",
+    "build-es": "rimraf es && cross-env BABEL_ENV=es babel src --out-dir es",
     "build-cjs": "rimraf lib && cross-env ABEL_ENV=cjs babel ./src -d lib --ignore __tests__",
     "build-dist": "rimraf dist && npm run build-dist-examples && npm run build-dist-lib",
     "build-dist-examples": "NODE_ENV=production webpack -p --config webpack-examples.config.js",
