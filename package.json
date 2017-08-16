@@ -2,7 +2,7 @@
   "name": "react-sticky-el",
   "version": "1.0.13",
   "description": "Sticky component for React",
-  "main": "lib/index.js",
+  "main": "dist/react-sticky-el.js",
   "jsnext:main": "es/index",
   "scripts": {
     "build": "npm run build-cjs && npm run build-es && npm run build-dist",
@@ -30,7 +30,8 @@
   "files": [
     "lib",
     "es",
-    "*.md"
+    "*.md",
+    "dist"
   ],
   "author": "Mikhail Bogdanov <admin@gm0.ru> (https://github.com/gm0t)",
   "license": "MIT",
@@ -58,6 +59,7 @@
     "chai": "^3.5.0",
     "cross-env": "^5.0.3",
     "css-loader": "^0.25.0",
+    "element-resize-detector": "^1.1.12",
     "express": "^4.14.0",
     "html-webpack-plugin": "^2.24.1",
     "jsdom": "^9.10.0",

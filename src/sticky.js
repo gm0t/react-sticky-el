@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
+import elementResizeDetectorMaker from 'element-resize-detector'
 import { listen, unlisten } from './helpers/events'
 import find from './helpers/find'
 
@@ -102,6 +103,12 @@ export default class Sticky extends Component {
         throw new Error('Cannot find scrollElement ' + scrollElement);
       }
 
+      if (this.boundaryElement) {
+        this.resizeListener = elementResizeDetectorMaker({strategy: 'scroll'});
+
+        this.resizeListener.listenTo(this.boundaryElement, this.checkPosition);
+      }
+
       listen(window, ['scroll', 'resize', 'pageshow', 'load'], this.checkPosition);
       this.checkPosition();
 
@@ -113,6 +120,10 @@ export default class Sticky extends Component {
   componentWillUnmount() {
       if (this.scrollElement) {
         unlisten(this.scrollElement, ['scroll'], this.checkPosition);
+      }
+
+      if (this.boundaryElement) {
+        this.resizeListener.removeListener(this.boundaryElement, this.checkPosition);
       }
       unlisten(window, ['scroll', 'resize', 'pageshow', 'load'], this.checkPosition);
       this.boundaryElement = null;
