@@ -28,7 +28,7 @@ const isEqual = (obj1, obj2) => {
   }
 
   return true;
-}
+};
 
 export default class Sticky extends Component {
   static propTypes = {
@@ -66,7 +66,7 @@ export default class Sticky extends Component {
   };
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       height: 0,
       fixed: false
@@ -74,7 +74,7 @@ export default class Sticky extends Component {
   }
 
   shouldComponentUpdate(nProps, nState) {
-    const { state, props } = this
+    const { state, props } = this;
     return !isEqual(state, nState) || !isEqual(props, nProps);
   }
 
@@ -174,7 +174,7 @@ export default class Sticky extends Component {
       width: holderRect.width,
       height: wrapperRect.height
     });
-  }
+  };
 
   buildTopStyles() {
     const { bottomOffset, hideOnBoundaryHit } = this.props;

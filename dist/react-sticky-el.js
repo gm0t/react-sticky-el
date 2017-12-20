@@ -52,7 +52,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -68,9 +68,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = _sticky2.default;
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -111,9 +111,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	module.exports = emptyFunction;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * Copyright (c) 2013-present, Facebook, Inc.
@@ -171,9 +171,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	module.exports = invariant;
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Copyright 2013-present, Facebook, Inc.
@@ -191,9 +191,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ReactPropTypesSecret;
 
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * Copyright 2014-2015, Facebook, Inc.
@@ -262,9 +262,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	module.exports = warning;
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -366,9 +366,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -423,9 +423,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return null;
 	}
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -492,10 +492,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    _this.checkPosition = function () {
-	      var holderEl = _this.holderEl;
-	      var wrapperEl = _this.wrapperEl;
-	      var boundaryElement = _this.boundaryElement;
-	      var scrollElement = _this.scrollElement;
+	      var holderEl = _this.holderEl,
+	          wrapperEl = _this.wrapperEl,
+	          boundaryElement = _this.boundaryElement,
+	          scrollElement = _this.scrollElement;
 
 
 	      var holderRect = holderEl.getBoundingClientRect(),
@@ -525,8 +525,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Sticky, [{
 	    key: 'shouldComponentUpdate',
 	    value: function shouldComponentUpdate(nProps, nState) {
-	      var state = this.state;
-	      var props = this.props;
+	      var state = this.state,
+	          props = this.props;
 
 	      return !isEqual(state, nState) || !isEqual(props, nProps);
 	    }
@@ -534,11 +534,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var me = _reactDom2.default.findDOMNode(this);
-	      var _props = this.props;
-	      var boundaryElement = _props.boundaryElement;
-	      var scrollElement = _props.scrollElement;
-	      var noExceptionOnMissedScrollElement = _props.noExceptionOnMissedScrollElement;
-	      var positionRecheckInterval = _props.positionRecheckInterval;
+	      var _props = this.props,
+	          boundaryElement = _props.boundaryElement,
+	          scrollElement = _props.scrollElement,
+	          noExceptionOnMissedScrollElement = _props.noExceptionOnMissedScrollElement,
+	          positionRecheckInterval = _props.positionRecheckInterval;
 
 
 	      this.boundaryElement = (0, _find2.default)(boundaryElement, me);
@@ -577,11 +577,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'isFixed',
 	    value: function isFixed(holderRect, wrapperRect, boundaryRect, scrollRect) {
-	      var _props2 = this.props;
-	      var hideOnBoundaryHit = _props2.hideOnBoundaryHit;
-	      var bottomOffset = _props2.bottomOffset;
-	      var topOffset = _props2.topOffset;
-	      var mode = _props2.mode;
+	      var _props2 = this.props,
+	          hideOnBoundaryHit = _props2.hideOnBoundaryHit,
+	          bottomOffset = _props2.bottomOffset,
+	          topOffset = _props2.topOffset,
+	          mode = _props2.mode;
 
 
 	      if (boundaryRect && !instersect(boundaryRect, scrollRect, topOffset, bottomOffset)) {
@@ -599,13 +599,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'buildTopStyles',
 	    value: function buildTopStyles() {
-	      var _props3 = this.props;
-	      var bottomOffset = _props3.bottomOffset;
-	      var hideOnBoundaryHit = _props3.hideOnBoundaryHit;
-	      var _state = this.state;
-	      var top = _state.top;
-	      var height = _state.height;
-	      var boundaryBottom = _state.boundaryBottom;
+	      var _props3 = this.props,
+	          bottomOffset = _props3.bottomOffset,
+	          hideOnBoundaryHit = _props3.hideOnBoundaryHit;
+	      var _state = this.state,
+	          top = _state.top,
+	          height = _state.height,
+	          boundaryBottom = _state.boundaryBottom;
 
 
 	      if (hideOnBoundaryHit || top + height + bottomOffset < boundaryBottom) {
@@ -617,13 +617,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'buildBottomStyles',
 	    value: function buildBottomStyles() {
-	      var _props4 = this.props;
-	      var bottomOffset = _props4.bottomOffset;
-	      var hideOnBoundaryHit = _props4.hideOnBoundaryHit;
-	      var _state2 = this.state;
-	      var bottom = _state2.bottom;
-	      var height = _state2.height;
-	      var boundaryTop = _state2.boundaryTop;
+	      var _props4 = this.props,
+	          bottomOffset = _props4.bottomOffset,
+	          hideOnBoundaryHit = _props4.hideOnBoundaryHit;
+	      var _state2 = this.state,
+	          bottom = _state2.bottom,
+	          height = _state2.height,
+	          boundaryTop = _state2.boundaryTop;
 
 
 	      if (hideOnBoundaryHit || bottom - height - bottomOffset > boundaryTop) {
@@ -649,15 +649,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'render',
 	    value: function render() {
 	      var props = this.props;
-	      var _state3 = this.state;
-	      var fixed = _state3.fixed;
-	      var height = _state3.height;
-	      var stickyClassName = props.stickyClassName;
-	      var stickyStyle = props.stickyStyle;
-	      var holderCmp = props.holderCmp;
-	      var wrapperCmp = props.wrapperCmp;
-	      var holderProps = props.holderProps;
-	      var children = props.children;
+	      var _state3 = this.state,
+	          fixed = _state3.fixed,
+	          height = _state3.height;
+	      var stickyClassName = props.stickyClassName,
+	          stickyStyle = props.stickyStyle,
+	          holderCmp = props.holderCmp,
+	          wrapperCmp = props.wrapperCmp,
+	          holderProps = props.holderProps,
+	          children = props.children;
 
 	      var wrapperProps = sanitizeProps(props, stickyOwnProps);
 	      // To ensure that this component becomes sticky immediately on mobile devices instead
@@ -755,9 +755,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return props;
 	}
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * Copyright 2013-present, Facebook, Inc.
@@ -822,9 +822,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = checkPropTypes;
 
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * Copyright 2013-present, Facebook, Inc.
@@ -887,9 +887,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * Copyright 2013-present, Facebook, Inc.
@@ -1405,9 +1405,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
+/***/ }),
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * Copyright 2013-present, Facebook, Inc.
@@ -1441,19 +1441,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 
-/***/ },
+/***/ }),
 /* 12 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_12__;
 
-/***/ },
+/***/ }),
 /* 13 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;
