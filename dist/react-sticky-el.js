@@ -498,21 +498,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	          scrollElement = _this.scrollElement;
 
 
-	      var holderRect = holderEl.getBoundingClientRect(),
-	          wrapperRect = wrapperEl.getBoundingClientRect(),
-	          boundaryRect = boundaryElement ? getRect(boundaryElement) : { top: -Infinity, bottom: Infinity },
-	          scrollRect = getRect(scrollElement),
-	          isFixed = _this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
+	      var mode = _this.props.mode;
+	      var holderRect = holderEl.getBoundingClientRect();
+	      var wrapperRect = wrapperEl.getBoundingClientRect();
+	      var boundaryRect = boundaryElement ? getRect(boundaryElement) : { top: -Infinity, bottom: Infinity };
+	      var scrollRect = getRect(scrollElement);
 
-	      _this.setState({
-	        fixed: isFixed,
-	        boundaryTop: boundaryRect.top,
-	        boundaryBottom: boundaryRect.bottom,
-	        top: scrollRect.top,
-	        bottom: scrollRect.bottom,
+	      var newState = {
+	        fixed: _this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect),
+	        boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
+	        boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
+	        top: mode === 'top' ? scrollRect.top : 0,
+	        bottom: mode === 'bottom' ? scrollRect.bottom : 0,
 	        width: holderRect.width,
 	        height: wrapperRect.height
-	      });
+	      };
+
+	      if (!isEqual(_this.state, newState)) {
+	        _this.setState(function () {
+	          return newState;
+	        });
+	      }
 	    };
 
 	    _this.state = {
@@ -523,14 +529,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(Sticky, [{
-	    key: 'shouldComponentUpdate',
-	    value: function shouldComponentUpdate(nProps, nState) {
-	      var state = this.state,
-	          props = this.props;
-
-	      return !isEqual(state, nState) || !isEqual(props, nProps);
-	    }
-	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var me = _reactDom2.default.findDOMNode(this);

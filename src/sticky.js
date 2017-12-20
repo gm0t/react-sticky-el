@@ -73,11 +73,6 @@ export default class Sticky extends Component {
     }
   }
 
-  shouldComponentUpdate(nProps, nState) {
-    const { state, props } = this;
-    return !isEqual(state, nState) || !isEqual(props, nProps);
-  }
-
   componentDidMount() {
       const me = ReactDOM.findDOMNode(this);
       const {
@@ -159,21 +154,25 @@ export default class Sticky extends Component {
       scrollElement
     } = this;
 
-    const holderRect = holderEl.getBoundingClientRect(),
-      wrapperRect = wrapperEl.getBoundingClientRect(),
-      boundaryRect = boundaryElement ? getRect(boundaryElement) : {top: -Infinity, bottom: Infinity},
-      scrollRect = getRect(scrollElement),
-      isFixed = this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
+    const mode = this.props.mode;
+    const holderRect = holderEl.getBoundingClientRect();
+    const wrapperRect = wrapperEl.getBoundingClientRect();
+    const boundaryRect = boundaryElement ? getRect(boundaryElement) : {top: -Infinity, bottom: Infinity};
+    const scrollRect = getRect(scrollElement);
 
-    this.setState({
-      fixed: isFixed,
-      boundaryTop: boundaryRect.top,
-      boundaryBottom: boundaryRect.bottom,
-      top: scrollRect.top,
-      bottom: scrollRect.bottom,
+    const newState = {
+      fixed: this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect),
+      boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
+      boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
+      top: mode === 'top' ? scrollRect.top : 0,
+      bottom: mode === 'bottom' ? scrollRect.bottom : 0,
       width: holderRect.width,
       height: wrapperRect.height
-    });
+    };
+
+    if (!isEqual(this.state, newState)) {
+      this.setState(() => newState);
+    }
   };
 
   buildTopStyles() {
@@ -259,7 +258,6 @@ export default class Sticky extends Component {
     )
   }
 }
-
 
 // some helpers
 

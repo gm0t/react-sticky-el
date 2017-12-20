@@ -22,7 +22,7 @@ function Block(props) {
 
 function blocks(topOffset, bottomOffset, hideOnBoundaryHit=true) {
   let blocks = [];
-  for (let i = 0; i < 30; i += 1) {
+  for (let i = 0; i < 10; i += 1) {
     blocks.push(<Block key={i} topOffset={topOffset} bottomOffset={bottomOffset} hideOnBoundaryHit={hideOnBoundaryHit}/>);
   }
   return blocks;
