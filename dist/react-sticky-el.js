@@ -499,13 +499,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 	      var mode = _this.props.mode;
+	      var hasFixed = _this.props.hasFixed;
 	      var holderRect = holderEl.getBoundingClientRect();
 	      var wrapperRect = wrapperEl.getBoundingClientRect();
 	      var boundaryRect = boundaryElement ? getRect(boundaryElement) : { top: -Infinity, bottom: Infinity };
 	      var scrollRect = getRect(scrollElement);
+	      var fixed = _this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
 
 	      var newState = {
-	        fixed: _this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect),
+	        fixed: fixed,
 	        boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
 	        boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
 	        top: mode === 'top' ? scrollRect.top : 0,
@@ -513,6 +515,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        width: holderRect.width,
 	        height: wrapperRect.height
 	      };
+
+	      if (fixed !== _this.state.fixed && hasFixed && typeof hasFixed === 'function') {
+	        hasFixed(_this.state.fixed);
+	      }
 
 	      if (!isEqual(_this.state, newState)) {
 	        _this.setState(function () {
@@ -678,7 +684,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      wrapperProps.style = wrapperStyle;
 	      wrapperProps.ref = this.createWrapperRef;
 
-	      return _react2.default.createElement(holderCmp, holderProps, _react2.default.createElement(wrapperCmp, wrapperProps, _react2.default.createElement('children', { fixed: this.state.fixed })));
+	      return _react2.default.createElement(holderCmp, holderProps, _react2.default.createElement(wrapperCmp, wrapperProps, children));
 	    }
 	  }]);
 
@@ -689,6 +695,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	Sticky.propTypes = {
 	  mode: _propTypes2.default.oneOf(['top', 'bottom']),
+	  hasFixed: _propTypes2.default.func,
 	  stickyStyle: _propTypes2.default.object,
 	  stickyClassName: _propTypes2.default.string,
 	  hideOnBoundaryHit: _propTypes2.default.bool,
