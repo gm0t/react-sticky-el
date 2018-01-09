@@ -678,7 +678,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      wrapperProps.style = wrapperStyle;
 	      wrapperProps.ref = this.createWrapperRef;
 
-	      return _react2.default.createElement(holderCmp, holderProps, _react2.default.createElement(wrapperCmp, wrapperProps, children));
+	      return _react2.default.createElement(holderCmp, holderProps, _react2.default.createElement(wrapperCmp, wrapperProps, _react2.default.createElement('children', { fixed: this.state.fixed })));
 	    }
 	  }]);
 
