@@ -33,6 +33,7 @@ const isEqual = (obj1, obj2) => {
 export default class Sticky extends Component {
   static propTypes = {
     mode: PropTypes.oneOf(['top', 'bottom']),
+    hasFixed: PropTypes.func,
     stickyStyle: PropTypes.object,
     stickyClassName: PropTypes.string,
     hideOnBoundaryHit: PropTypes.bool,
@@ -155,13 +156,15 @@ export default class Sticky extends Component {
     } = this;
 
     const mode = this.props.mode;
+    const hasFixed = this.props.hasFixed;
     const holderRect = holderEl.getBoundingClientRect();
     const wrapperRect = wrapperEl.getBoundingClientRect();
     const boundaryRect = boundaryElement ? getRect(boundaryElement) : {top: -Infinity, bottom: Infinity};
     const scrollRect = getRect(scrollElement);
+    const fixed = this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
 
     const newState = {
-      fixed: this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect),
+      fixed,
       boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
       boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
       top: mode === 'top' ? scrollRect.top : 0,
@@ -169,6 +172,10 @@ export default class Sticky extends Component {
       width: holderRect.width,
       height: wrapperRect.height
     };
+
+    if (fixed !== this.state.fixed && hasFixed && typeof hasFixed === 'function') {
+      hasFixed(this.state.fixed);
+    }
 
     if (!isEqual(this.state, newState)) {
       this.setState(() => newState);
