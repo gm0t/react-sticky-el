@@ -463,7 +463,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var stickyOwnProps = ['mode', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'hideOnBoundaryHit', 'holderProps'];
+	var stickyOwnProps = ['mode', 'onFixedToggle', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'hideOnBoundaryHit', 'holderProps'];
 
 	var isEqual = function isEqual(obj1, obj2) {
 	  for (var field in obj1) {
@@ -496,10 +496,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	          wrapperEl = _this.wrapperEl,
 	          boundaryElement = _this.boundaryElement,
 	          scrollElement = _this.scrollElement;
+	      var _this$props = _this.props,
+	          mode = _this$props.mode,
+	          onFixedToggle = _this$props.onFixedToggle;
 
-
-	      var mode = _this.props.mode;
-	      var hasFixed = _this.props.hasFixed;
 	      var holderRect = holderEl.getBoundingClientRect();
 	      var wrapperRect = wrapperEl.getBoundingClientRect();
 	      var boundaryRect = boundaryElement ? getRect(boundaryElement) : { top: -Infinity, bottom: Infinity };
@@ -516,8 +516,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        height: wrapperRect.height
 	      };
 
-	      if (fixed !== _this.state.fixed && hasFixed && typeof hasFixed === 'function') {
-	        hasFixed(_this.state.fixed);
+	      if (fixed !== _this.state.fixed && onFixedToggle && typeof onFixedToggle === 'function') {
+	        onFixedToggle(_this.state.fixed);
 	      }
 
 	      if (!isEqual(_this.state, newState)) {
@@ -695,7 +695,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	Sticky.propTypes = {
 	  mode: _propTypes2.default.oneOf(['top', 'bottom']),
-	  hasFixed: _propTypes2.default.func,
+	  onFixedToggle: _propTypes2.default.func,
 	  stickyStyle: _propTypes2.default.object,
 	  stickyClassName: _propTypes2.default.string,
 	  hideOnBoundaryHit: _propTypes2.default.bool,
