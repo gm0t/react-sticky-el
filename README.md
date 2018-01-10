@@ -67,7 +67,7 @@ Note that the calculation of the Sticky element's height does not currently take
 
 'top' or 'bottom' - to which side element should stick
 
-#### hasFixed _(default: null)_
+#### onFixedToggle _(default: null)_
 
 This props call before changed state `fixed`  
 
