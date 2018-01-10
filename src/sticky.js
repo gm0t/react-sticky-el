@@ -6,6 +6,7 @@ import find from './helpers/find'
 
 const stickyOwnProps = [
   'mode',
+  'onFixedToggle',
   'stickyStyle',
   'stickyClassName',
   'boundaryElement',
@@ -33,7 +34,7 @@ const isEqual = (obj1, obj2) => {
 export default class Sticky extends Component {
   static propTypes = {
     mode: PropTypes.oneOf(['top', 'bottom']),
-    hasFixed: PropTypes.func,
+    onFixedToggle: PropTypes.func,
     stickyStyle: PropTypes.object,
     stickyClassName: PropTypes.string,
     hideOnBoundaryHit: PropTypes.bool,
@@ -155,8 +156,10 @@ export default class Sticky extends Component {
       scrollElement
     } = this;
 
-    const mode = this.props.mode;
-    const hasFixed = this.props.hasFixed;
+    const {
+      mode,
+      onFixedToggle
+    } = this.props;
     const holderRect = holderEl.getBoundingClientRect();
     const wrapperRect = wrapperEl.getBoundingClientRect();
     const boundaryRect = boundaryElement ? getRect(boundaryElement) : {top: -Infinity, bottom: Infinity};
@@ -173,8 +176,8 @@ export default class Sticky extends Component {
       height: wrapperRect.height
     };
 
-    if (fixed !== this.state.fixed && hasFixed && typeof hasFixed === 'function') {
-      hasFixed(this.state.fixed);
+    if (fixed !== this.state.fixed && onFixedToggle && typeof onFixedToggle === 'function') {
+      onFixedToggle(this.state.fixed);
     }
 
     if (!isEqual(this.state, newState)) {
