@@ -69,16 +69,16 @@ Note that the calculation of the Sticky element's height does not currently take
 
 #### onFixedToggle _(default: null)_
 
-This props call before changed state `fixed`  
+This handler will be called right before changing `fixed` state.
 
 #### wrapperCmp _(default: 'div')_
 
-Anything that can used by React.createElement. Used for `wrapper element`.
+Anything that can be used by React.createElement. Used for `wrapper element`.
 If you want to use some custom component, please be sure that you don't lose `style` and `className` props.
 
 #### holderCmp _(default: 'div')_
 
-Anything that can used by `React.createElement`. Used for `holder element`.
+Anything that can be used by `React.createElement`. Used for `holder element`.
 If you want to use some custom component, please be sure that you don't lose `style` and `className` props.
 
 #### holderProps _(default: {})_
