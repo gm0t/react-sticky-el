@@ -8,7 +8,7 @@ function callback(status) {
 function Block(props) {
   return (
     <div className="block">
-      <Sticky boundaryElement=".block" scrollElement=".scroll-area" {...props} hasFixed={callback}>
+      <Sticky boundaryElement=".block" scrollElement=".scroll-area" {...props} onFixedToggle={callback}>
         <h2 className="header">Header</h2>
       </Sticky>
       <p>
@@ -17,7 +17,7 @@ function Block(props) {
       <p>
         Nunc congue magna eget eros blandit, eu viverra magna semper. Nullam in diam a metus dictum consequat. Quisque ultricies, ipsum non euismod semper, velit felis lacinia nibh, et finibus quam leo vitae nisi. Maecenas interdum diam quis risus bibendum, eu fermentum est pharetra. In dictum at enim pretium bibendum. Praesent efficitur iaculis dolor in sodales. Morbi maximus in ipsum in malesuada. Proin semper lacus tempor magna aliquam, sed aliquam dui scelerisque. Donec nisi nulla, rhoncus a tristique eget, ultrices vitae dolor. Ut id urna vitae ante tincidunt pharetra at non metus. Nunc in suscipit nulla. Sed vitae leo vulputate, euismod tortor vel, aliquet velit. Curabitur eget tincidunt elit. Nam et ligula finibus, eleifend velit et, commodo quam. Praesent non libero velit.
       </p>
-      <Sticky mode="bottom" boundaryElement=".block" scrollElement=".scroll-area" {...props} hasFixed={callback}>
+      <Sticky mode="bottom" boundaryElement=".block" scrollElement=".scroll-area" {...props}>
         <h2 className="footer">Footer</h2>
       </Sticky>
     </div>
@@ -27,7 +27,7 @@ function Block(props) {
 function blocks(topOffset, bottomOffset, hideOnBoundaryHit=true) {
   let blocks = [];
   for (let i = 0; i < 10; i += 1) {
-    blocks.push(<Block key={i} topOffset={topOffset} bottomOffset={bottomOffset} hideOnBoundaryHit={hideOnBoundaryHit}/>);
+    blocks.push(<Block key={i} topOffset={topOffset} bottomOffset={bottomOffset} hideOnBoundaryHit={hideOnBoundaryHit} />);
   }
   return blocks;
 }
