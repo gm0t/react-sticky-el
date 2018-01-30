@@ -257,7 +257,7 @@ export default class Sticky extends Component {
     }
 
     wrapperProps.style = wrapperStyle;
-    if(typeof holderCmp === 'string') {
+    if(typeof wrapperCmp === 'string') {
       wrapperProps.ref = this.createWrapperRef;      
     } else {
       wrapperProps.wrapperRef = this.createWrapperRef;
