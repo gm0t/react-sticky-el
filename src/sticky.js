@@ -249,11 +249,19 @@ export default class Sticky extends Component {
       };
     }
 
-    holderProps.style = {...holderProps.style, minHeight: height + 'px'};
-    holderProps.ref = this.createHolderRef;
+    holderProps.style = {...holderProps.style, minHeight: height + 'px'};    
+    if(typeof holderCmp === 'string') {
+      holderProps.ref = this.createHolderRef;      
+    } else {
+      holderProps.holderRef = this.createHolderRef;
+    }
 
     wrapperProps.style = wrapperStyle;
-    wrapperProps.ref = this.createWrapperRef;
+    if(typeof holderCmp === 'string') {
+      wrapperProps.ref = this.createWrapperRef;      
+    } else {
+      wrapperProps.wrapperRef = this.createWrapperRef;
+    }
 
     return (
       React.createElement(
