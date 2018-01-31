@@ -108,7 +108,7 @@ describe('helpers/events', function() {
       // simple case
       unlisten(el, [e1], cb1);
       expect(el.removeEventListener).to.have.been.calledOnce.calledWithExactly(e1, l1);
-      el.removeEventListener.reset();
+      el.removeEventListener.resetHistory();
 
       // remove only one of the listeners
       unlisten(el, [e2, e3], cb2);
@@ -116,8 +116,8 @@ describe('helpers/events', function() {
       l3(randomString());
       expect(cb2).to.have.not.been.called;
       expect(cb3).to.have.been.calledOnce;
-      cb3.reset();
-      el.removeEventListener.reset();
+      cb3.resetHistory();
+      el.removeEventListener.resetHistory();
 
       unlisten(el, [e3], cb3);
       expect(el.removeEventListener).to.have.been.calledOnce.calledWithExactly(e3, l3);

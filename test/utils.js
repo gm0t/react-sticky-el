@@ -11,19 +11,6 @@ class TestsWrapper extends Component {
   }
 }
 
-var containers = [];
-export function mount(cmp) {
-  let container = document.createElement('div');
-  containers.push(container);
-  document.body.appendChild(container);
-  return ReactDOM.render(<TestsWrapper>{cmp}</TestsWrapper>, container);
-}
-
-export function unmountAll() {
-  containers.forEach(container => ReactDOM.unmountComponentAtNode(container));
-  containers = [];
-}
-
 export function emitEvent(type, window) {
   let evt = document.createEvent('Event');
   evt.initEvent(type, true, true);
