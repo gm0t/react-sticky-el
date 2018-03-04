@@ -87,7 +87,7 @@ These props will be used to create `holderElement`.
 
 #### boundaryElement _(default: null)_
 
-Selector to define a `boundaryElement`. 
+Selector to define a `boundaryElement`.
 It should be one of the parents of the current element.
 
 Loot at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example.
@@ -182,12 +182,12 @@ app.jsx
 Loot at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example
 
 #### hideOnBoundaryHit _(default: true)_
-If `false` then boundaryEl should have position: relative. In this case sticky element won't disappear on reaching it's boundaries. 
+If `false` then boundaryEl should have position: relative. In this case sticky element won't disappear on reaching it's boundaries.
 
-Loot at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example
+Look at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example.
 
 #### Other props
-All other props (such as className, style, etc..) will be applyed to the `holder` element
+All other props (such as className, style, etc..) will be applyed to the `holder` element.
 
 
 ### License
