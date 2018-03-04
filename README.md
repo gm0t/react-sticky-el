@@ -182,7 +182,20 @@ app.jsx
 Loot at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example
 
 #### hideOnBoundaryHit _(default: true)_
-If `false` then boundaryEl should have position: relative. In this case sticky element won't disappear on reaching it's boundaries.
+If `false` then boundaryEl should have position: relative. In this case sticky element won't disappear on reaching it's boundaries. A configuration like this is implemented below.
+<br />
+```js
+  import Sticky from 'react-sticky-el';
+  ...
+  <div className = "block"  >
+
+    <Sticky boundaryElement=".block" style = {{position: 'relative'}} hideOnBoundaryHit={false}>
+    <SomeChild />
+
+    </Sticky>
+  </div>
+  ...
+```
 
 Look at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example.
 
