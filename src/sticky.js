@@ -6,6 +6,7 @@ import find from './helpers/find'
 
 const stickyOwnProps = [
   'mode',
+  'disbled',
   'onFixedToggle',
   'stickyStyle',
   'stickyClassName',
@@ -38,6 +39,7 @@ export default class Sticky extends Component {
     stickyStyle: PropTypes.object,
     stickyClassName: PropTypes.string,
     hideOnBoundaryHit: PropTypes.bool,
+    disabled: PropTypes.bool,
     boundaryElement: PropTypes.string,
     scrollElement: PropTypes.string,
     bottomOffset: PropTypes.number,
@@ -59,6 +61,7 @@ export default class Sticky extends Component {
     stickyClassName: 'sticky',
     stickyStyle: null,
     hideOnBoundaryHit: true,
+    disabled: false,
     boundaryElement: null,
     scrollElement: 'window',
     topOffset: 0,
@@ -69,6 +72,7 @@ export default class Sticky extends Component {
 
   constructor(props) {
     super(props);
+    this.disabled = props.disabled
     this.state = {
       height: 0,
       fixed: false
@@ -81,9 +85,11 @@ export default class Sticky extends Component {
         boundaryElement,
         scrollElement,
         noExceptionOnMissedScrollElement,
-        positionRecheckInterval
+        positionRecheckInterval,
+        disabled
       } = this.props;
 
+      this.disabled = disabled
       this.boundaryElement = find(boundaryElement, me);
       if (this.boundaryElement === window || this.boundaryElement === document) {
         // such objects can't be used as boundary
@@ -105,6 +111,13 @@ export default class Sticky extends Component {
       if (positionRecheckInterval) {
         this.checkPositionIntervalId = setInterval(this.checkPosition, positionRecheckInterval);
       }
+  }
+
+  componentWillReceiveProps({ disabled }) {
+    if (this.disabled !== disabled) {
+      this.disabled = disabled
+      this.checkPosition()
+    }
   }
 
   componentWillUnmount() {
@@ -133,6 +146,10 @@ export default class Sticky extends Component {
       mode
     } = this.props;
 
+    if (this.disabled) {
+      return false
+    }
+
     if (boundaryRect && !instersect(boundaryRect, scrollRect, topOffset, bottomOffset)) {
       return false
     }
@@ -153,13 +170,22 @@ export default class Sticky extends Component {
       holderEl,
       wrapperEl,
       boundaryElement,
-      scrollElement
+      scrollElement,
+      disabled
     } = this;
 
     const {
       mode,
-      onFixedToggle
+      onFixedToggle,
     } = this.props;
+
+    if (disabled) {
+      if (this.state.fixed) {
+        this.setState(() => ({ fixed: false }))
+      }
+      return
+    }
+
     const holderRect = holderEl.getBoundingClientRect();
     const wrapperRect = wrapperEl.getBoundingClientRect();
     const boundaryRect = boundaryElement ? getRect(boundaryElement) : {top: -Infinity, bottom: Infinity};
