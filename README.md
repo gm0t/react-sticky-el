@@ -67,6 +67,10 @@ Note that the calculation of the Sticky element's height does not currently take
 
 'top' or 'bottom' - to which side element should stick
 
+#### disabled _(default: false)_
+
+Allows you to disable sticking by setting this prop to `true`
+
 #### onFixedToggle _(default: null)_
 
 This handler will be called right before changing `fixed` state.

@@ -463,7 +463,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var stickyOwnProps = ['mode', 'onFixedToggle', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'hideOnBoundaryHit', 'holderProps'];
+	var stickyOwnProps = ['mode', 'disbled', 'onFixedToggle', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'hideOnBoundaryHit', 'holderProps'];
 
 	var isEqual = function isEqual(obj1, obj2) {
 	  for (var field in obj1) {
@@ -495,10 +495,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var holderEl = _this.holderEl,
 	          wrapperEl = _this.wrapperEl,
 	          boundaryElement = _this.boundaryElement,
-	          scrollElement = _this.scrollElement;
+	          scrollElement = _this.scrollElement,
+	          disabled = _this.disabled;
 	      var _this$props = _this.props,
 	          mode = _this$props.mode,
 	          onFixedToggle = _this$props.onFixedToggle;
+
+
+	      if (disabled) {
+	        if (_this.state.fixed) {
+	          _this.setState(function () {
+	            return { fixed: false };
+	          });
+	        }
+	        return;
+	      }
 
 	      var holderRect = holderEl.getBoundingClientRect();
 	      var wrapperRect = wrapperEl.getBoundingClientRect();
@@ -527,6 +538,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    };
 
+	    _this.disabled = props.disabled;
 	    _this.state = {
 	      height: 0,
 	      fixed: false
@@ -542,9 +554,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	          boundaryElement = _props.boundaryElement,
 	          scrollElement = _props.scrollElement,
 	          noExceptionOnMissedScrollElement = _props.noExceptionOnMissedScrollElement,
-	          positionRecheckInterval = _props.positionRecheckInterval;
+	          positionRecheckInterval = _props.positionRecheckInterval,
+	          disabled = _props.disabled;
 
 
+	      this.disabled = disabled;
 	      this.boundaryElement = (0, _find2.default)(boundaryElement, me);
 	      if (this.boundaryElement === window || this.boundaryElement === document) {
 	        // such objects can't be used as boundary
@@ -568,6 +582,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(_ref) {
+	      var disabled = _ref.disabled;
+
+	      if (this.disabled !== disabled) {
+	        this.disabled = disabled;
+	        this.checkPosition();
+	      }
+	    }
+	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      if (this.scrollElement) {
@@ -587,6 +611,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	          topOffset = _props2.topOffset,
 	          mode = _props2.mode;
 
+
+	      if (this.disabled) {
+	        return false;
+	      }
 
 	      if (boundaryRect && !instersect(boundaryRect, scrollRect, topOffset, bottomOffset)) {
 	        return false;
@@ -699,6 +727,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  stickyStyle: _propTypes2.default.object,
 	  stickyClassName: _propTypes2.default.string,
 	  hideOnBoundaryHit: _propTypes2.default.bool,
+	  disabled: _propTypes2.default.bool,
 	  boundaryElement: _propTypes2.default.string,
 	  scrollElement: _propTypes2.default.string,
 	  bottomOffset: _propTypes2.default.number,
@@ -719,6 +748,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  stickyClassName: 'sticky',
 	  stickyStyle: null,
 	  hideOnBoundaryHit: true,
+	  disabled: false,
 	  boundaryElement: null,
 	  scrollElement: 'window',
 	  topOffset: 0,
