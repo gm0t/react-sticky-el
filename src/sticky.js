@@ -41,7 +41,7 @@ export default class Sticky extends Component {
     hideOnBoundaryHit: PropTypes.bool,
     disabled: PropTypes.bool,
     boundaryElement: PropTypes.string,
-    scrollElement: PropTypes.string,
+    scrollElement: PropTypes.any,
     bottomOffset: PropTypes.number,
     topOffset: PropTypes.number,
     positionRecheckInterval: PropTypes.number,
@@ -96,8 +96,9 @@ export default class Sticky extends Component {
         // and in fact there is no point in such a case
         this.boundaryElement = null;
       }
-
-      this.scrollElement = find(scrollElement, me);
+      this.scrollElement = scrollElement
+      if (typeof scrollElement == 'string')
+        this.scrollElement = find(scrollElement, me);      
 
       if (this.scrollElement) {
         listen(this.scrollElement, ['scroll'], this.checkPosition)
