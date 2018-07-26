@@ -23,14 +23,51 @@ const stickyOwnProps = [
 ];
 
 const isEqual = (obj1, obj2) => {
-  for (let field in obj1) {
-    if (obj1.hasOwnProperty(field) && obj1[field] !== obj2[field]) {
+  const styles1 = obj1.styles;
+  const styles2 = obj2.styles;
+
+  if (
+    obj1.fixed !== obj2.fixed ||
+    obj1.height !== obj2.height ||
+    (!styles1 && styles2) ||
+    (styles1 && !styles2)
+  ) {
+    return false
+  }
+
+  for (let field in styles1) {
+    if (styles1.hasOwnProperty(field) && styles1[field] !== styles2[field]) {
       return false;
     }
   }
 
   return true;
 };
+
+const buildTopStyles = (container, props) => {
+  const { bottomOffset, hideOnBoundaryHit } = props;
+  const { top, height, width, boundaryBottom } = container;
+
+  if (hideOnBoundaryHit || (top + height + bottomOffset < boundaryBottom)) {
+    return { top, width, position: 'fixed' };
+  }
+
+  return { width, bottom: bottomOffset, position: 'absolute' };
+};
+
+const buildBottomStyles = (container, props) => {
+  const { bottomOffset, hideOnBoundaryHit } = props;
+  const { bottom, height, width, boundaryTop } = container;
+
+  if (hideOnBoundaryHit || (bottom - height - bottomOffset > boundaryTop)) {
+    return { width, top: bottom - height, position: 'fixed' };
+  }
+
+  return { width, top: bottomOffset, position: 'absolute' };
+};
+
+const buildStickyStyle = (mode, props, container) =>
+  (mode === 'top' ? buildTopStyles : buildBottomStyles)(container, props);
 
 export default class Sticky extends Component {
   static propTypes = {
@@ -75,7 +112,8 @@ export default class Sticky extends Component {
     this.disabled = props.disabled
     this.state = {
       height: 0,
-      fixed: false
+      fixed: false,
+      styles: null,
     }
   }
 
@@ -97,8 +135,9 @@ export default class Sticky extends Component {
         this.boundaryElement = null;
       }
       this.scrollElement = scrollElement
-      if (typeof scrollElement == 'string')
-        this.scrollElement = find(scrollElement, me);      
+      if (typeof scrollElement === 'string') {
+        this.scrollElement = find(scrollElement, me);
+      }
 
       if (this.scrollElement) {
         listen(this.scrollElement, ['scroll'], this.checkPosition)
@@ -182,7 +221,7 @@ export default class Sticky extends Component {
 
     if (disabled) {
       if (this.state.fixed) {
-        this.setState(() => ({ fixed: false }))
+        this.setState({ fixed: false })
       }
       return
     }
@@ -195,12 +234,15 @@ export default class Sticky extends Component {
 
     const newState = {
       fixed,
-      boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
-      boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
-      top: mode === 'top' ? scrollRect.top : 0,
-      bottom: mode === 'bottom' ? scrollRect.bottom : 0,
-      width: holderRect.width,
-      height: wrapperRect.height
+      height: wrapperRect.height,
+      styles: fixed ? buildStickyStyle(mode, this.props, {
+        boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
+        boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
+        top: mode === 'top' ? scrollRect.top : 0,
+        bottom: mode === 'bottom' ? scrollRect.bottom : 0,
+        width: holderRect.width,
+        height: wrapperRect.height
+      }) : null
     };
 
     if (fixed !== this.state.fixed && onFixedToggle && typeof onFixedToggle === 'function') {
@@ -208,43 +250,9 @@ export default class Sticky extends Component {
     }
 
     if (!isEqual(this.state, newState)) {
-      this.setState(() => newState);
+      this.setState(newState);
     }
   };
-
-  buildTopStyles() {
-    const { bottomOffset, hideOnBoundaryHit } = this.props;
-    const { top, height, boundaryBottom } = this.state;
-
-    if (hideOnBoundaryHit || (top + height + bottomOffset < boundaryBottom)) {
-      return { top, position: 'fixed' };
-    }
-
-    return { bottom: bottomOffset, position: 'absolute' };
-  }
-
-  buildBottomStyles() {
-    const { bottomOffset, hideOnBoundaryHit } = this.props;
-    const { bottom, height, boundaryTop } = this.state;
-
-    if (hideOnBoundaryHit || (bottom - height - bottomOffset > boundaryTop)) {
-      return { top: bottom - height, position: 'fixed' };
-    }
-
-    return { top: bottomOffset, position: 'absolute' };
-  }
-
-  buildStickyStyle() {
-    let style;
-    if (this.props.mode === 'top') {
-      style = this.buildTopStyles();
-    } else {
-      style =  this.buildBottomStyles();
-    }
-    style.width = this.state.width;
-
-    return style;
-  }
 
   render() {
     const props = this.props;
@@ -272,7 +280,7 @@ export default class Sticky extends Component {
       wrapperStyle = {
         ...wrapperStyle,
         ...stickyStyle,
-        ...this.buildStickyStyle()
+        ...this.state.styles
       };
     }
 
@@ -281,7 +289,6 @@ export default class Sticky extends Component {
 
     wrapperProps.style = wrapperStyle;
     wrapperProps.ref = this.createWrapperRef;
-
     return (
       React.createElement(
         holderCmp,

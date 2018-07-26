@@ -37,7 +37,7 @@ h1, h2 {
 
   & .scroll-area {
     height: 100%;
-    overflow: scroll;
+    overflow-y: scroll;
     position: relative;
   }
 }

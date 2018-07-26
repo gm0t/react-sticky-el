@@ -1,6 +1,6 @@
 {
   "name": "react-sticky-el",
-  "version": "1.0.18",
+  "version": "1.0.20",
   "description": "Sticky component for React",
   "main": "lib/index.js",
   "jsnext:main": "es/index",
@@ -65,8 +65,8 @@
     "jsdom": "^11.11.0",
     "mocha": "^5.0.0",
     "node-sass": "^3.13.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
     "react-hot-loader": "^3.0.0-beta.6",
     "rimraf": "^2.5.4",
     "sass-loader": "^4.0.2",

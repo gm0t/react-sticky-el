@@ -466,13 +466,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	var stickyOwnProps = ['mode', 'disabled', 'onFixedToggle', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'hideOnBoundaryHit', 'holderProps'];
 
 	var isEqual = function isEqual(obj1, obj2) {
-	  for (var field in obj1) {
-	    if (obj1.hasOwnProperty(field) && obj1[field] !== obj2[field]) {
+	  var styles1 = obj1.styles;
+	  var styles2 = obj2.styles;
+
+	  if (obj1.fixed !== obj2.fixed || obj1.height !== obj2.height || !styles1 && styles2 || styles1 && !styles2) {
+	    return false;
+	  }
+
+	  for (var field in styles1) {
+	    if (styles1.hasOwnProperty(field) && styles1[field] !== styles2[field]) {
 	      return false;
 	    }
 	  }
 
 	  return true;
+	};
+
+	var buildTopStyles = function buildTopStyles(container, props) {
+	  var bottomOffset = props.bottomOffset,
+	      hideOnBoundaryHit = props.hideOnBoundaryHit;
+	  var top = container.top,
+	      height = container.height,
+	      width = container.width,
+	      boundaryBottom = container.boundaryBottom;
+
+
+	  if (hideOnBoundaryHit || top + height + bottomOffset < boundaryBottom) {
+	    return { top: top, width: width, position: 'fixed' };
+	  }
+
+	  return { width: width, bottom: bottomOffset, position: 'absolute' };
+	};
+
+	var buildBottomStyles = function buildBottomStyles(container, props) {
+	  var bottomOffset = props.bottomOffset,
+	      hideOnBoundaryHit = props.hideOnBoundaryHit;
+	  var bottom = container.bottom,
+	      height = container.height,
+	      width = container.width,
+	      boundaryTop = container.boundaryTop;
+
+
+	  if (hideOnBoundaryHit || bottom - height - bottomOffset > boundaryTop) {
+	    return { width: width, top: bottom - height, position: 'fixed' };
+	  }
+
+	  return { width: width, top: bottomOffset, position: 'absolute' };
+	};
+
+	var buildStickyStyle = function buildStickyStyle(mode, props, container) {
+	  return (mode === 'top' ? buildTopStyles : buildBottomStyles)(container, props);
 	};
 
 	var Sticky = function (_Component) {
@@ -504,9 +547,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      if (disabled) {
 	        if (_this.state.fixed) {
-	          _this.setState(function () {
-	            return { fixed: false };
-	          });
+	          _this.setState({ fixed: false });
 	        }
 	        return;
 	      }
@@ -519,12 +560,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var newState = {
 	        fixed: fixed,
-	        boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
-	        boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
-	        top: mode === 'top' ? scrollRect.top : 0,
-	        bottom: mode === 'bottom' ? scrollRect.bottom : 0,
-	        width: holderRect.width,
-	        height: wrapperRect.height
+	        height: wrapperRect.height,
+	        styles: fixed ? buildStickyStyle(mode, _this.props, {
+	          boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
+	          boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
+	          top: mode === 'top' ? scrollRect.top : 0,
+	          bottom: mode === 'bottom' ? scrollRect.bottom : 0,
+	          width: holderRect.width,
+	          height: wrapperRect.height
+	        }) : null
 	      };
 
 	      if (fixed !== _this.state.fixed && onFixedToggle && typeof onFixedToggle === 'function') {
@@ -532,16 +576,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      if (!isEqual(_this.state, newState)) {
-	        _this.setState(function () {
-	          return newState;
-	        });
+	        _this.setState(newState);
 	      }
 	    };
 
 	    _this.disabled = props.disabled;
 	    _this.state = {
 	      height: 0,
-	      fixed: false
+	      fixed: false,
+	      styles: null
 	    };
 	    return _this;
 	  }
@@ -566,7 +609,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.boundaryElement = null;
 	      }
 	      this.scrollElement = scrollElement;
-	      if (typeof scrollElement == 'string') this.scrollElement = (0, _find2.default)(scrollElement, me);
+	      if (typeof scrollElement === 'string') {
+	        this.scrollElement = (0, _find2.default)(scrollElement, me);
+	      }
 
 	      if (this.scrollElement) {
 	        (0, _events.listen)(this.scrollElement, ['scroll'], this.checkPosition);
@@ -629,61 +674,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return holderRect.bottom - topOffset > scrollRect.bottom && scrollRect.bottom - hideOffset >= boundaryRect.top;
 	    }
 	  }, {
-	    key: 'buildTopStyles',
-	    value: function buildTopStyles() {
-	      var _props3 = this.props,
-	          bottomOffset = _props3.bottomOffset,
-	          hideOnBoundaryHit = _props3.hideOnBoundaryHit;
-	      var _state = this.state,
-	          top = _state.top,
-	          height = _state.height,
-	          boundaryBottom = _state.boundaryBottom;
-
-
-	      if (hideOnBoundaryHit || top + height + bottomOffset < boundaryBottom) {
-	        return { top: top, position: 'fixed' };
-	      }
-
-	      return { bottom: bottomOffset, position: 'absolute' };
-	    }
-	  }, {
-	    key: 'buildBottomStyles',
-	    value: function buildBottomStyles() {
-	      var _props4 = this.props,
-	          bottomOffset = _props4.bottomOffset,
-	          hideOnBoundaryHit = _props4.hideOnBoundaryHit;
-	      var _state2 = this.state,
-	          bottom = _state2.bottom,
-	          height = _state2.height,
-	          boundaryTop = _state2.boundaryTop;
-
-
-	      if (hideOnBoundaryHit || bottom - height - bottomOffset > boundaryTop) {
-	        return { top: bottom - height, position: 'fixed' };
-	      }
-
-	      return { top: bottomOffset, position: 'absolute' };
-	    }
-	  }, {
-	    key: 'buildStickyStyle',
-	    value: function buildStickyStyle() {
-	      var style = void 0;
-	      if (this.props.mode === 'top') {
-	        style = this.buildTopStyles();
-	      } else {
-	        style = this.buildBottomStyles();
-	      }
-	      style.width = this.state.width;
-
-	      return style;
-	    }
-	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var props = this.props;
-	      var _state3 = this.state,
-	          fixed = _state3.fixed,
-	          height = _state3.height;
+	      var _state = this.state,
+	          fixed = _state.fixed,
+	          height = _state.height;
 	      var stickyClassName = props.stickyClassName,
 	          stickyStyle = props.stickyStyle,
 	          holderCmp = props.holderCmp,
@@ -703,7 +699,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      if (fixed) {
 	        wrapperProps.className += ' ' + stickyClassName;
-	        wrapperStyle = _extends({}, wrapperStyle, stickyStyle, this.buildStickyStyle());
+	        wrapperStyle = _extends({}, wrapperStyle, stickyStyle, this.state.styles);
 	      }
 
 	      holderProps.style = _extends({}, holderProps.style, { minHeight: height + 'px' });
@@ -711,7 +707,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      wrapperProps.style = wrapperStyle;
 	      wrapperProps.ref = this.createWrapperRef;
-
 	      return _react2.default.createElement(holderCmp, holderProps, _react2.default.createElement(wrapperCmp, wrapperProps, children));
 	    }
 	  }]);
