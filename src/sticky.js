@@ -6,7 +6,7 @@ import find from './helpers/find'
 
 const stickyOwnProps = [
   'mode',
-  'disbled',
+  'disabled',
   'onFixedToggle',
   'stickyStyle',
   'stickyClassName',

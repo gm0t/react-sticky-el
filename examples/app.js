@@ -24,40 +24,60 @@ function Block(props) {
   );
 }
 
-function blocks(topOffset, bottomOffset, hideOnBoundaryHit=true) {
+function blocks(disabled, topOffset, bottomOffset, hideOnBoundaryHit=true) {
   let blocks = [];
   for (let i = 0; i < 10; i += 1) {
-    blocks.push(<Block key={i} topOffset={topOffset} bottomOffset={bottomOffset} hideOnBoundaryHit={hideOnBoundaryHit} />);
+    blocks.push(
+      <Block
+        key={i}
+        disabled={disabled}
+        topOffset={topOffset}
+        bottomOffset={bottomOffset}
+        hideOnBoundaryHit={hideOnBoundaryHit}
+      />
+    );
   }
   return blocks;
 }
 
 export default class App extends Component {
+  state = { disabled: false };
+  toggle = () => this.setState({ disabled: !this.state.disabled });
+
   render() {
+    const { disabled } = this.state;
     return (
-      <div className="container">
-        <div className="column">
-          <h1>Simple case <br/> hideOnBoundaryHit=true</h1>
-          <div className="scroll-area">
-            {blocks()}
-          </div>
+      <div className="page">
+        <div style={{ textAlign: "center"}}>
+          <button onClick={this.toggle}>
+            {`${this.state.disabled ? 'enable' : 'disable'} sticky`}
+          </button>
         </div>
-        <div className="column">
-          <h1>With offset <br/> hideOnBoundaryHit=true</h1>
-          <div className="scroll-area">
-            {blocks(70, 70)}
+
+        <div className="container">
+          <div className="column">
+            <h1>Simple case <br/> hideOnBoundaryHit=true</h1>
+            <div className="scroll-area">
+              {blocks(disabled)}
+            </div>
           </div>
-        </div>
-        <div className="column">
-          <h1>Simple case <br/> hideOnBoundaryHit=false</h1>
-          <div className="scroll-area">
-            {blocks(0, 0, false)}
+          <div className="column">
+            <h1>With offset <br/> hideOnBoundaryHit=true</h1>
+            <div className="scroll-area">
+              {blocks(disabled, 70, 70)}
+            </div>
           </div>
-        </div>
-        <div className="column">
-          <h1>With offset <br/> hideOnBoundaryHit=false</h1>
-          <div className="scroll-area">
-            {blocks(70, 70, false)}
+          <div className="column">
+            <h1>Simple case <br/> hideOnBoundaryHit=false</h1>
+            <div className="scroll-area">
+              {blocks(disabled, 0, 0, false)}
+            </div>
+          </div>
+          <div className="column">
+            <h1>With offset <br/> hideOnBoundaryHit=false</h1>
+            <div className="scroll-area">
+              {blocks(disabled, 70, 70, false)}
+            </div>
           </div>
         </div>
       </div>

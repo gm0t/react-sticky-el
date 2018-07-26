@@ -463,7 +463,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var stickyOwnProps = ['mode', 'disbled', 'onFixedToggle', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'hideOnBoundaryHit', 'holderProps'];
+	var stickyOwnProps = ['mode', 'disabled', 'onFixedToggle', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'hideOnBoundaryHit', 'holderProps'];
 
 	var isEqual = function isEqual(obj1, obj2) {
 	  for (var field in obj1) {
@@ -565,8 +565,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // and in fact there is no point in such a case
 	        this.boundaryElement = null;
 	      }
-
-	      this.scrollElement = (0, _find2.default)(scrollElement, me);
+	      this.scrollElement = scrollElement;
+	      if (typeof scrollElement == 'string') this.scrollElement = (0, _find2.default)(scrollElement, me);
 
 	      if (this.scrollElement) {
 	        (0, _events.listen)(this.scrollElement, ['scroll'], this.checkPosition);
@@ -729,7 +729,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  hideOnBoundaryHit: _propTypes2.default.bool,
 	  disabled: _propTypes2.default.bool,
 	  boundaryElement: _propTypes2.default.string,
-	  scrollElement: _propTypes2.default.string,
+	  scrollElement: _propTypes2.default.any,
 	  bottomOffset: _propTypes2.default.number,
 	  topOffset: _propTypes2.default.number,
 	  positionRecheckInterval: _propTypes2.default.number,
