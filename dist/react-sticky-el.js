@@ -558,12 +558,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var scrollRect = getRect(scrollElement);
 	      var fixed = _this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
 
+	      function getClosestTransformedParent(el) {
+	        do {
+	          var style = window.getComputedStyle(el);
+	          if (style.transform !== 'none' || style.webkitTransform !== 'none') return el;
+	          el = el.parentElement || el.parentNode;
+	        } while (el !== null && el.nodeType === 1);
+	        return null;
+	      }
+
+	      var closestTransformedParent = getClosestTransformedParent(scrollElement);
+	      var offsets = fixed && closestTransformedParent ? getRect(closestTransformedParent) : null;
+
 	      var newState = {
 	        fixed: fixed,
 	        height: wrapperRect.height,
 	        styles: fixed ? buildStickyStyle(mode, _this.props, {
-	          boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
-	          boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
+	          boundaryTop: mode === 'bottom' ? boundaryRect.top - (offsets ? offsets.top : 0) : 0,
+	          boundaryBottom: mode === 'top' ? boundaryRect.bottom - (offsets ? offsets.bottom : 0) : 0,
 	          top: mode === 'top' ? scrollRect.top : 0,
 	          bottom: mode === 'bottom' ? scrollRect.bottom : 0,
 	          width: holderRect.width,
