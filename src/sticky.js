@@ -248,10 +248,10 @@ export default class Sticky extends Component {
       fixed,
       height: wrapperRect.height,
       styles: fixed ? buildStickyStyle(mode, this.props, {
-		boundaryTop: mode === 'bottom' ? boundaryRect.top - (offsets ? offsets.top : 0) : 0,
-		boundaryBottom: mode === 'top' ? boundaryRect.bottom - (offsets ? offsets.bottom : 0) : 0,
-        top: mode === 'top' ? scrollRect.top : 0,
-        bottom: mode === 'bottom' ? scrollRect.bottom : 0,
+		boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
+		boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
+		top: mode === 'top' ? scrollRect.top - (offsets ? offsets.top : 0) : 0,
+		bottom: mode === 'bottom' ? scrollRect.bottom - (offsets ? offsets.bottom : 0) : 0,
         width: holderRect.width,
         height: wrapperRect.height
       }) : null
