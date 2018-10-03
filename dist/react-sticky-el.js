@@ -7,7 +7,7 @@
 		exports["ReactStickyEl"] = factory(require("react"), require("react-dom"));
 	else
 		root["ReactStickyEl"] = factory(root["React"], root["ReactDOM"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_13__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_14__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -60,7 +60,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _sticky = __webpack_require__(7);
+	var _sticky = __webpack_require__(8);
 
 	var _sticky2 = _interopRequireDefault(_sticky);
 
@@ -425,6 +425,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 7 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = getClosestTransformedParent;
+	function getClosestTransformedParent(el) {
+	    do {
+	        var style = window.getComputedStyle(el);
+	        if (style.transform !== 'none' || style.webkitTransform !== 'none') return el;
+	        el = el.parentElement || el.parentNode;
+	    } while (el !== null && el.nodeType === 1);
+	    return null;
+	}
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -437,15 +456,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _react = __webpack_require__(12);
+	var _react = __webpack_require__(13);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _propTypes = __webpack_require__(11);
+	var _propTypes = __webpack_require__(12);
 
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 
-	var _reactDom = __webpack_require__(13);
+	var _reactDom = __webpack_require__(14);
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
@@ -455,6 +474,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _find2 = _interopRequireDefault(_find);
 
+	var _getClosestTransformedParent = __webpack_require__(7);
+
+	var _getClosestTransformedParent2 = _interopRequireDefault(_getClosestTransformedParent);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -463,7 +486,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var stickyOwnProps = ['mode', 'disabled', 'onFixedToggle', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'hideOnBoundaryHit', 'holderProps'];
+	var stickyOwnProps = ['mode', 'disabled', 'onFixedToggle', 'stickyStyle', 'stickyClassName', 'boundaryElement', 'scrollElement', 'bottomOffset', 'topOffset', 'positionRecheckInterval', 'noExceptionOnMissedScrollElement', 'wrapperCmp', 'holderCmp', 'hideOnBoundaryHit', 'offsetTransforms', 'holderProps'];
 
 	var isEqual = function isEqual(obj1, obj2) {
 	  var styles1 = obj1.styles;
@@ -542,7 +565,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          disabled = _this.disabled;
 	      var _this$props = _this.props,
 	          mode = _this$props.mode,
-	          onFixedToggle = _this$props.onFixedToggle;
+	          onFixedToggle = _this$props.onFixedToggle,
+	          offsetTransforms = _this$props.offsetTransforms;
 
 
 	      if (disabled) {
@@ -558,17 +582,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var scrollRect = getRect(scrollElement);
 	      var fixed = _this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
 
-	      function getClosestTransformedParent(el) {
-	        do {
-	          var style = window.getComputedStyle(el);
-	          if (style.transform !== 'none' || style.webkitTransform !== 'none') return el;
-	          el = el.parentElement || el.parentNode;
-	        } while (el !== null && el.nodeType === 1);
-	        return null;
+	      var offsets = null;
+	      if (offsetTransforms && fixed) {
+	        var closestTransformedParent = (0, _getClosestTransformedParent2.default)(scrollElement);
+	        if (closestTransformedParent) offsets = getRect(closestTransformedParent);
 	      }
-
-	      var closestTransformedParent = getClosestTransformedParent(scrollElement);
-	      var offsets = fixed && closestTransformedParent ? getRect(closestTransformedParent) : null;
 
 	      var newState = {
 	        fixed: fixed,
@@ -734,6 +752,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  stickyStyle: _propTypes2.default.object,
 	  stickyClassName: _propTypes2.default.string,
 	  hideOnBoundaryHit: _propTypes2.default.bool,
+	  offsetTransforms: _propTypes2.default.bool,
 	  disabled: _propTypes2.default.bool,
 	  boundaryElement: _propTypes2.default.string,
 	  scrollElement: _propTypes2.default.any,
@@ -755,6 +774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  stickyClassName: 'sticky',
 	  stickyStyle: null,
 	  hideOnBoundaryHit: true,
+	  offsetTransforms: false,
 	  disabled: false,
 	  boundaryElement: null,
 	  scrollElement: 'window',
@@ -798,7 +818,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -865,7 +885,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -930,7 +950,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -949,7 +969,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var warning = __webpack_require__(4);
 
 	var ReactPropTypesSecret = __webpack_require__(3);
-	var checkPropTypes = __webpack_require__(8);
+	var checkPropTypes = __webpack_require__(9);
 
 	module.exports = function(isValidElement, throwOnDirectAccess) {
 	  /* global Symbol */
@@ -1448,7 +1468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -1475,25 +1495,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // By explicitly using `prop-types` you are opting into new development behavior.
 	  // http://fb.me/prop-types-in-prod
 	  var throwOnDirectAccess = true;
-	  module.exports = __webpack_require__(10)(isValidElement, throwOnDirectAccess);
+	  module.exports = __webpack_require__(11)(isValidElement, throwOnDirectAccess);
 	} else {
 	  // By explicitly using `prop-types` you are opting into new production behavior.
 	  // http://fb.me/prop-types-in-prod
-	  module.exports = __webpack_require__(9)();
+	  module.exports = __webpack_require__(10)();
 	}
 
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_12__;
 
 /***/ }),
 /* 13 */
 /***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_14__;
 
 /***/ })
 /******/ ])
