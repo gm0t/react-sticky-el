@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import { listen, unlisten } from './helpers/events'
 import find from './helpers/find'
+import getClosestTransformedParent from './helpers/getClosestTransformedParent'
 
 const stickyOwnProps = [
   'mode',
@@ -19,6 +20,7 @@ const stickyOwnProps = [
   'wrapperCmp',
   'holderCmp',
   'hideOnBoundaryHit',
+  'offsetTransforms',
   'holderProps'
 ];
 
@@ -76,6 +78,7 @@ export default class Sticky extends Component {
     stickyStyle: PropTypes.object,
     stickyClassName: PropTypes.string,
     hideOnBoundaryHit: PropTypes.bool,
+    offsetTransforms: PropTypes.bool,
     disabled: PropTypes.bool,
     boundaryElement: PropTypes.string,
     scrollElement: PropTypes.any,
@@ -98,6 +101,7 @@ export default class Sticky extends Component {
     stickyClassName: 'sticky',
     stickyStyle: null,
     hideOnBoundaryHit: true,
+    offsetTransforms: false,
     disabled: false,
     boundaryElement: null,
     scrollElement: 'window',
@@ -217,6 +221,7 @@ export default class Sticky extends Component {
     const {
       mode,
       onFixedToggle,
+      offsetTransforms,
     } = this.props;
 
     if (disabled) {
@@ -232,26 +237,20 @@ export default class Sticky extends Component {
     const scrollRect = getRect(scrollElement);
     const fixed = this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
 
-	function getClosestTransformedParent(el) {
-		do {
-			const style = window.getComputedStyle(el);
-			if (style.transform !== 'none' || style.webkitTransform !== 'none') return el;
-			el = el.parentElement || el.parentNode;
-		} while (el !== null && el.nodeType === 1);
-		return null;
-	}
-
-	const closestTransformedParent = getClosestTransformedParent(scrollElement);
-	const offsets = fixed && closestTransformedParent ? getRect(closestTransformedParent) : null;
+    let offsets = null;
+    if (offsetTransforms && fixed) {
+      const closestTransformedParent = getClosestTransformedParent(scrollElement);
+      if (closestTransformedParent) offsets = getRect(closestTransformedParent);
+    }
 
     const newState = {
       fixed,
       height: wrapperRect.height,
       styles: fixed ? buildStickyStyle(mode, this.props, {
-		boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
-		boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
-		top: mode === 'top' ? scrollRect.top - (offsets ? offsets.top : 0) : 0,
-		bottom: mode === 'bottom' ? scrollRect.bottom - (offsets ? offsets.bottom : 0) : 0,
+        boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
+        boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
+        top: mode === 'top' ? scrollRect.top - (offsets ? offsets.top : 0) : 0,
+        bottom: mode === 'bottom' ? scrollRect.bottom - (offsets ? offsets.bottom : 0) : 0,
         width: holderRect.width,
         height: wrapperRect.height
       }) : null
