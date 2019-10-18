@@ -157,7 +157,7 @@ export default class Sticky extends Component {
       }
   }
 
-  componentWillReceiveProps({ disabled }) {
+  UNSAFE_componentWillReceiveProps({ disabled }) {
     if (this.disabled !== disabled) {
       this.disabled = disabled
       this.checkPosition()
