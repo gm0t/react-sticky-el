@@ -657,8 +657,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
-	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps(_ref) {
+	    key: 'UNSAFE_componentWillReceiveProps',
+	    value: function UNSAFE_componentWillReceiveProps(_ref) {
 	      var disabled = _ref.disabled;
 
 	      if (this.disabled !== disabled) {
