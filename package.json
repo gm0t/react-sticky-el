@@ -13,8 +13,9 @@
     "build-dist-examples": "NODE_ENV=production webpack -p --config webpack-examples.config.js",
     "build-dist-lib": "webpack src/index.js -o dist/react-sticky-el.js && NODE_ENV=production webpack -p src/index.js -o dist/react-sticky-el.min.js --display-modules --progress",
     "start": "webpack-dev-server --config webpack-examples.config.js",
-    "test": "BABEL_ENV=test mocha --require babel-core/register --require ./test/setup test/unit",
-    "test-watch": "BABEL_ENV=test mocha -w --require babel-core/register --require ./test/setup test/unit"
+    "test": "BABEL_ENV=test mocha --require @babel/register --require ./test/setup test/unit",
+    "test-watch": "BABEL_ENV=test mocha -w --require @babel/register --require ./test/setup test/unit",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -63,6 +64,7 @@
     "@babel/plugin-syntax-import-meta": "^7.0.0",
     "@babel/preset-env": "^7.8.4",
     "@babel/preset-react": "^7.8.3",
+    "@babel/register": "^7.8.3",
     "@types/react": "^16.9.19",
     "ajv": "^6.11.0",
     "babel-eslint": "^10.0.3",
