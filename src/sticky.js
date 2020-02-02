@@ -117,7 +117,7 @@ export default class Sticky extends Component {
     this.state = {
       height: 0,
       fixed: false,
-      styles: null,
+      styles: null
     }
   }
 
@@ -221,7 +221,7 @@ export default class Sticky extends Component {
     const {
       mode,
       onFixedToggle,
-      offsetTransforms,
+      offsetTransforms
     } = this.props;
 
     if (disabled) {
@@ -230,6 +230,8 @@ export default class Sticky extends Component {
       }
       return
     }
+
+    if (!holderEl.getBoundingClientRect || !wrapperEl.getBoundingClientRect) { return }
 
     const holderRect = holderEl.getBoundingClientRect();
     const wrapperRect = wrapperEl.getBoundingClientRect();
