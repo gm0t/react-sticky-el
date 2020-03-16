@@ -63,6 +63,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-syntax-import-meta": "^7.0.0",
     "@babel/preset-env": "^7.8.4",
+    "@babel/preset-flow": "^7.8.3",
     "@babel/preset-react": "^7.8.3",
     "@babel/register": "^7.8.3",
     "@types/react": "^16.9.19",
@@ -99,6 +100,8 @@
     "webpack-hot-middleware": "^2.25.0"
   },
   "dependencies": {
+    "eslint-plugin-react": "^7.19.0",
+    "flow-bin": "^0.120.1",
     "prop-types": ">=15.7.2"
   }
 }
