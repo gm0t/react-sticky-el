@@ -1,4 +1,6 @@
-import React, { Component } from 'react'
+// @flow
+
+import React, { Component, type ComponentType, type Ref } from 'react'
 import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import { listen, unlisten } from './helpers/events'
@@ -71,7 +73,24 @@ const buildBottomStyles = (container, props) => {
 const buildStickyStyle = (mode, props, container) =>
   (mode === 'top' ? buildTopStyles : buildBottomStyles)(container, props);
 
-export default class Sticky extends Component {
+export type Props<WrapperProps, HolderProps> = {
+  mode: 'bottom' | 'top',
+  onFixedToggle: (boolean) => void,
+  stickyStyle: { [string]: string },
+  stickyClassName: string,
+  hideOnBoundaryHit: boolean,
+  offsetTransforms: boolean,
+  disabled: boolean,
+  boudaryElement: string,
+  scrollElement: string | HTMLElement,
+  bottomOffset: number,
+  topOffset: number,
+  positionRecheckInterval: number,
+  noExceptionOnMissedScrollElement: boolean,
+  wrapperCmp: ComponentType<$Exact<{ ...WrapperProps, style: Style, innerRef: Ref<HTMLElement>, ref: Ref<HTMLElement>}>
+}
+
+export default class Sticky<WrapperProps, HoldrerProps> extends Component<Props<WrapperProps, HolderProps>> {
   static propTypes = {
     mode: PropTypes.oneOf(['top', 'bottom']),
     onFixedToggle: PropTypes.func,
