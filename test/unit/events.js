@@ -84,17 +84,23 @@ describe('helpers/events', function() {
     });
 
     it('should call removeListener if last callback had been removed', function () {
-      var l1, l2, l3, str = randomString(),
+      var str = randomString(),
         e1 = 'e1-' + str, e2 = 'e2-' + str, e3 = 'e3-' + str,
         cb1 = spy(), cb2 = spy(), cb3 = spy();
 
+      const listeners = {};
+      const deleted = {};
+
       var el = {
         addEventListener: spy((e, cb) => {
-          if (e === e1) l1 = cb;
-          if (e === e2) l2 = cb;
-          if (e === e3) l3 = cb;
+          listeners[e] = cb;
         }),
-        removeEventListener: spy()
+        removeEventListener: spy((e, cb) => {
+          if (listeners[e] === cb) {
+            deleted[e] = cb;
+            delete listeners[e];
+          }
+        })
       };
 
       listen(el, [e1], cb1);
@@ -107,28 +113,24 @@ describe('helpers/events', function() {
 
       // simple case
       unlisten(el, [e1], cb1);
-      expect(el.removeEventListener).to.have.been.calledOnce.calledWithExactly(e1, l1);
+      expect(el.removeEventListener).to.have.been.calledOnce.calledWithExactly(e1, deleted[e1]);
       el.removeEventListener.resetHistory();
 
       // remove only one of the listeners
       unlisten(el, [e2, e3], cb2);
-      expect(el.removeEventListener).to.have.been.calledOnce.calledWithExactly(e2, l2);
-      l3(randomString());
+      expect(el.removeEventListener).to.have.been.calledOnce.calledWithExactly(e2, deleted[e2]);
+
+      listeners[e3](randomString());
       expect(cb2).to.have.not.been.called;
       expect(cb3).to.have.been.calledOnce;
+
       cb3.resetHistory();
       el.removeEventListener.resetHistory();
 
       unlisten(el, [e3], cb3);
-      expect(el.removeEventListener).to.have.been.calledOnce.calledWithExactly(e3, l3);
+      expect(el.removeEventListener).to.have.been.calledOnce.calledWithExactly(e3, deleted[e3]);
 
-      l1(randomString());
-      l2(randomString());
-      l3(randomString());
-
-      expect(cb1).to.have.not.been.called;
-      expect(cb2).to.have.not.been.called;
-      expect(cb3).to.have.not.been.called;
+      expect(listeners).to.deep.equal({}, 'all listeners should have been removed')
     });
 
   });
