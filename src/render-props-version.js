@@ -173,7 +173,7 @@ class Sticky extends Component<RenderProps, State> {
     };
 
     if (isFixed !== this.state.isFixed && onFixedToggle && typeof onFixedToggle === 'function') {
-      onFixedToggle(this.state.isFixed);
+      onFixedToggle(isFixed);
     }
 
     if (!isEqual(this.state, newState)) {
