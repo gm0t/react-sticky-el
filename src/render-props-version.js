@@ -15,7 +15,14 @@ type State = {
   +holderStyles: MaybeStyles
 }
 
-const buildTopStyles = (container, props): { [string]: string } => {
+type StickyStyles = $Exact<{
+  top?: string,
+  bottom?: string,
+  width: string,
+  position: string,
+}>;
+
+const buildTopStyles = (container, props): StickyStyles => {
   const { bottomOffset, hideOnBoundaryHit } = props;
   const { top, height, width, boundaryBottom } = container;
 
@@ -26,7 +33,7 @@ const buildTopStyles = (container, props): { [string]: string } => {
   return { width: `${width}px`, bottom: `${bottomOffset}px`, position: 'absolute' };
 };
 
-const buildBottomStyles = (container, props): { [string]: string } => {
+const buildBottomStyles = (container, props): StickyStyles => {
   const { bottomOffset, hideOnBoundaryHit } = props;
   const { bottom, height, width, boundaryTop } = container;
 
@@ -73,6 +80,7 @@ class Sticky extends Component<RenderProps, State> {
     mode: 'top',
     topOffset: 0,
     bottomOffset: 0,
+    isIOSFixEnabled: true,
   };
 
   holderEl: HTMLElement | null = null;
@@ -129,7 +137,8 @@ class Sticky extends Component<RenderProps, State> {
     const {
       mode,
       onFixedToggle,
-      offsetTransforms
+      offsetTransforms,
+      isIOSFixEnabled,
     } = this.props;
 
     if (disabled) {
@@ -158,18 +167,30 @@ class Sticky extends Component<RenderProps, State> {
       }
     }
 
+    // To ensure that this component becomes sticky immediately on mobile devices instead
+    // of disappearing until the scroll event completes, we add `transform: translateZ(0)`
+    // to 'kick' rendering of this element to the GPU
+    // @see http://stackoverflow.com/questions/32875046
+    const iosRenderingFixStyles = isIOSFixEnabled ? {
+      transform: 'translateZ(0)',
+      WebkitTransform: 'translateZ(0)'
+    } : null;
+
     const newState: State = {
       isFixed,
       height: wrapperRect.height,
       holderStyles: { minHeight: `${wrapperRect.height}px` },
-      wrapperStyles: isFixed ? buildStickyStyle(mode, this.props, {
-        boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
-        boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
-        top: mode === 'top' ? scrollRect.top - (offsets ? offsets.top : 0) : 0,
-        bottom: mode === 'bottom' ? scrollRect.bottom - (offsets ? offsets.bottom : 0) : 0,
-        width: holderRect.width,
-        height: wrapperRect.height
-      }) : null
+      wrapperStyles: isFixed ? {
+        ...iosRenderingFixStyles,
+        ...buildStickyStyle(mode, this.props, {
+          boundaryTop: mode === 'bottom' ? boundaryRect.top : 0,
+          boundaryBottom: mode === 'top' ? boundaryRect.bottom : 0,
+          top: mode === 'top' ? scrollRect.top - (offsets ? offsets.top : 0) : 0,
+          bottom: mode === 'bottom' ? scrollRect.bottom - (offsets ? offsets.bottom : 0) : 0,
+          width: holderRect.width,
+          height: wrapperRect.height
+        })
+      } : iosRenderingFixStyles
     };
 
     if (isFixed !== this.state.isFixed && onFixedToggle && typeof onFixedToggle === 'function') {
