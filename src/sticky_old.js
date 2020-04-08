@@ -1,32 +1,19 @@
 // @flow
 
-import React, { Component, type ComponentType, type Ref } from 'react'
+import React, { Component, type ComponentType, type Node, createRef } from 'react'
 import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import { listen, unlisten } from './helpers/events'
 import find from './helpers/find'
 import getClosestTransformedParent from './helpers/getClosestTransformedParent'
 
-const stickyOwnProps = [
-  'mode',
-  'disabled',
-  'onFixedToggle',
-  'stickyStyle',
-  'stickyClassName',
-  'boundaryElement',
-  'scrollElement',
-  'bottomOffset',
-  'topOffset',
-  'positionRecheckInterval',
-  'noExceptionOnMissedScrollElement',
-  'wrapperCmp',
-  'holderCmp',
-  'hideOnBoundaryHit',
-  'offsetTransforms',
-  'holderProps'
-];
+type State = {
+  +fixed: boolean,
+  +height: number,
+  +styles: { [string]: mixed } | null
+}
 
-const isEqual = (obj1, obj2) => {
+const isEqual = (obj1: State, obj2: State) => {
   const styles1 = obj1.styles;
   const styles2 = obj2.styles;
 
@@ -37,6 +24,11 @@ const isEqual = (obj1, obj2) => {
     (styles1 && !styles2)
   ) {
     return false
+  }
+
+  if (!styles2) {
+    // we need this condition to make Flow happy
+    return true;
   }
 
   for (let field in styles1) {
@@ -73,26 +65,74 @@ const buildBottomStyles = (container, props) => {
 const buildStickyStyle = (mode, props, container) =>
   (mode === 'top' ? buildTopStyles : buildBottomStyles)(container, props);
 
-export type Props<WrapperProps, HolderProps> = {
+type Rect = {
+  top: number,
+  left: number,
+  bottom: number,
+  height: number,
+  width: number,
+  right: number,
+}
+
+type Ref = {
+  current: null | HTMLElement
+}
+
+type CommonProps = {
   mode: 'bottom' | 'top',
   onFixedToggle: (boolean) => void,
-  stickyStyle: { [string]: string },
-  stickyClassName: string,
   hideOnBoundaryHit: boolean,
   offsetTransforms: boolean,
   disabled: boolean,
-  boudaryElement: string,
+  boundaryElement: string,
   scrollElement: string | HTMLElement,
   bottomOffset: number,
   topOffset: number,
   positionRecheckInterval: number,
   noExceptionOnMissedScrollElement: boolean,
-  wrapperCmp: ComponentType<$Exact<{ ...WrapperProps, style: Style, innerRef: Ref<HTMLElement>, ref: Ref<HTMLElement>}>
 }
 
-export default class Sticky<WrapperProps, HoldrerProps> extends Component<Props<WrapperProps, HolderProps>> {
+type BasicProps = {
+  ...CommonProps,
+  children: Node,
+  stickyClassName: string,
+  stickyStyle: { [string]: string },
+}
+
+export type RenderFuncArgs = {
+  holderRef: Ref,
+  wrapperRef: Ref,
+  elRef: Ref,
+  isFixed: boolean,
+  wrapperStyles: { [string]: string },
+  holderStyles: { [string]: string },
+}
+
+export type RenderFunc = RenderFuncArgs => Node;
+
+type RenderProps = {
+  ...CommonProps,
+  children: RenderFunc
+}
+
+export type Props = RenderProps | BasicProps;
+
+const infiniteRect: Rect = { top: -Infinity, bottom: Infinity, height: Infinity, left: -Infinity, right: Infinity, width: Infinity };
+
+export default class Sticky extends Component<Props, State> {
+  disabled: boolean;
+
+  // elements
+  wrapperEl: any;
+  holderEl: any;
+  boundaryElement: Element | null;
+  scrollElement: Element | null;
+  // eslint-disable-next-line no-undef
+  checkPositionIntervalId: IntervalID;
+
+
   static propTypes = {
-    mode: PropTypes.oneOf(['top', 'bottom']),
+    mode: PropTypes.oneOf([ 'top', 'bottom' ]),
     onFixedToggle: PropTypes.func,
     stickyStyle: PropTypes.object,
     stickyClassName: PropTypes.string,
@@ -105,8 +145,8 @@ export default class Sticky<WrapperProps, HoldrerProps> extends Component<Props<
     topOffset: PropTypes.number,
     positionRecheckInterval: PropTypes.number,
     noExceptionOnMissedScrollElement: PropTypes.bool,
-    wrapperCmp: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-    holderCmp: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+    wrapperCmp: PropTypes.oneOfType([ PropTypes.string, PropTypes.func ]),
+    holderCmp: PropTypes.oneOfType([ PropTypes.string, PropTypes.func ]),
     holderProps: PropTypes.object
   };
 
@@ -130,9 +170,9 @@ export default class Sticky<WrapperProps, HoldrerProps> extends Component<Props<
     positionRecheckInterval: 0
   };
 
-  constructor(props) {
+  constructor(props: Props<WrapperProps, HolderProps>) {
     super(props);
-    this.disabled = props.disabled
+    this.disabled = props.disabled;
     this.state = {
       height: 0,
       fixed: false,
@@ -141,67 +181,71 @@ export default class Sticky<WrapperProps, HoldrerProps> extends Component<Props<
   }
 
   componentDidMount() {
-      const me = ReactDOM.findDOMNode(this);
-      const {
-        boundaryElement,
-        scrollElement,
-        noExceptionOnMissedScrollElement,
-        positionRecheckInterval,
-        disabled
-      } = this.props;
+    // $FlowFixMe
+    const me = (ReactDOM.findDOMNode(this): HTMLElement);
 
-      this.disabled = disabled
-      this.boundaryElement = find(boundaryElement, me);
-      if (this.boundaryElement === window || this.boundaryElement === document) {
-        // such objects can't be used as boundary
-        // and in fact there is no point in such a case
-        this.boundaryElement = null;
-      }
-      this.scrollElement = scrollElement
-      if (typeof scrollElement === 'string') {
-        this.scrollElement = find(scrollElement, me);
-      }
+    const {
+      boundaryElement,
+      scrollElement,
+      noExceptionOnMissedScrollElement,
+      positionRecheckInterval,
+      disabled
+    } = this.props;
 
-      if (this.scrollElement) {
-        listen(this.scrollElement, ['scroll'], this.checkPosition)
-      } else if (!noExceptionOnMissedScrollElement) {
-        throw new Error('Cannot find scrollElement ' + scrollElement);
-      }
+    this.disabled = disabled;
+    this.boundaryElement = find(boundaryElement, me);
+    if (this.boundaryElement === window || this.boundaryElement === document) {
+      // such objects can't be used as boundary
+      // and in fact there is no point in such a case
+      this.boundaryElement = null;
+    }
 
-      listen(window, ['scroll', 'resize', 'pageshow', 'load'], this.checkPosition);
-      this.checkPosition();
+    if (typeof scrollElement === 'string') {
+      this.scrollElement = find(scrollElement, me);
+    } else {
+      this.scrollElement = scrollElement;
+    }
 
-      if (positionRecheckInterval) {
-        this.checkPositionIntervalId = setInterval(this.checkPosition, positionRecheckInterval);
-      }
+    if (this.scrollElement) {
+      listen(this.scrollElement, [ 'scroll' ], this.checkPosition)
+    } else if (!noExceptionOnMissedScrollElement) {
+      throw new Error('Cannot find scrollElement ' + (typeof scrollElement === 'string' ? scrollElement : 'unknown'));
+    }
+
+    listen(window, [ 'scroll', 'resize', 'pageshow', 'load' ], this.checkPosition);
+    this.checkPosition();
+
+    if (positionRecheckInterval) {
+      this.checkPositionIntervalId = setInterval(this.checkPosition, positionRecheckInterval);
+    }
   }
 
-  UNSAFE_componentWillReceiveProps({ disabled }) {
+  UNSAFE_componentWillReceiveProps({ disabled }: Props<WrapperProps, HolderProps>) {
     if (this.disabled !== disabled) {
-      this.disabled = disabled
-      this.checkPosition()
+      this.disabled = disabled;
+      this.checkPosition();
     }
   }
 
   componentWillUnmount() {
-      if (this.scrollElement) {
-        unlisten(this.scrollElement, ['scroll'], this.checkPosition);
-      }
-      unlisten(window, ['scroll', 'resize', 'pageshow', 'load'], this.checkPosition);
-      this.boundaryElement = null;
-      this.scrollElement = null;
-      clearTimeout(this.checkPositionIntervalId);
+    if (this.scrollElement) {
+      unlisten(this.scrollElement, [ 'scroll' ], this.checkPosition);
+    }
+    unlisten(window, [ 'scroll', 'resize', 'pageshow', 'load' ], this.checkPosition);
+    this.boundaryElement = null;
+    this.scrollElement = null;
+    clearInterval(this.checkPositionIntervalId);
   }
 
-  createWrapperRef = (wrapper) => {
+  createWrapperRef = (wrapper: any) => {
     this.wrapperEl = wrapper;
   };
 
-  createHolderRef = (holder) => {
+  createHolderRef = (holder: any) => {
     this.holderEl = holder;
   };
 
-  isFixed(holderRect, wrapperRect, boundaryRect, scrollRect) {
+  isFixed(holderRect: Rect, wrapperRect: Rect, boundaryRect: Rect, scrollRect: Rect) {
     const {
       hideOnBoundaryHit,
       bottomOffset,
@@ -213,7 +257,7 @@ export default class Sticky<WrapperProps, HoldrerProps> extends Component<Props<
       return false
     }
 
-    if (boundaryRect && !instersect(boundaryRect, scrollRect, topOffset, bottomOffset)) {
+    if (boundaryRect && !intersect(boundaryRect, scrollRect, topOffset, bottomOffset)) {
       return false
     }
 
@@ -250,11 +294,13 @@ export default class Sticky<WrapperProps, HoldrerProps> extends Component<Props<
       return
     }
 
-    if (!holderEl.getBoundingClientRect || !wrapperEl.getBoundingClientRect) { return }
+    if (!holderEl.getBoundingClientRect || !wrapperEl.getBoundingClientRect) {
+      return
+    }
 
-    const holderRect = holderEl.getBoundingClientRect();
-    const wrapperRect = wrapperEl.getBoundingClientRect();
-    const boundaryRect = boundaryElement ? getRect(boundaryElement) : {top: -Infinity, bottom: Infinity};
+    const holderRect: Rect = holderEl.getBoundingClientRect();
+    const wrapperRect: Rect = wrapperEl.getBoundingClientRect();
+    const boundaryRect: Rect = boundaryElement ? getRect(boundaryElement) : infiniteRect;
     const scrollRect = getRect(scrollElement);
     const fixed = this.isFixed(holderRect, wrapperRect, boundaryRect, scrollRect);
 
@@ -288,27 +334,41 @@ export default class Sticky<WrapperProps, HoldrerProps> extends Component<Props<
 
   render() {
     const props = this.props;
-    const {fixed, height} = this.state;
+    const { fixed, height } = this.state;
     const {
       stickyClassName,
       stickyStyle,
       holderCmp,
       wrapperCmp,
       holderProps,
-      children
+      children,
+      mode,
+      disabled,
+      onFixedToggle,
+      boundaryElement,
+      scrollElement,
+      bottomOffset,
+      topOffset,
+      positionRecheckInterval,
+      noExceptionOnMissedScrollElement,
+      hideOnBoundaryHit,
+      offsetTransforms,
+      ...sealedWrapperProps
     } = props;
-    let wrapperProps = sanitizeProps(props, stickyOwnProps);
+
+    const wrapperProps: { [string]: mixed } = sealedWrapperProps;
     // To ensure that this component becomes sticky immediately on mobile devices instead
     // of disappearing until the scroll event completes, we add `transform: translateZ(0)`
     // to 'kick' rendering of this element to the GPU
     // @see http://stackoverflow.com/questions/32875046
-    let wrapperStyle = {transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)'};
+    // TODO: only for iOS
+    let wrapperStyle: { [string]: string } = { transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' };
     if (wrapperProps.style) {
-      wrapperStyle = {...wrapperStyle, ...wrapperProps.style};
+      wrapperStyle = { ...wrapperStyle, ...wrapperProps.style };
     }
 
     if (fixed) {
-      wrapperProps.className += ' ' + stickyClassName;
+      wrapperProps.className = `${wrapperProps.className || ''} ${stickyClassName}`;
       wrapperStyle = {
         ...wrapperStyle,
         ...stickyStyle,
@@ -316,7 +376,7 @@ export default class Sticky<WrapperProps, HoldrerProps> extends Component<Props<
       };
     }
 
-    holderProps.style = {...holderProps.style, minHeight: height + 'px'};
+    holderProps.style = { ...(holderProps.style || {}), minHeight: height + 'px' };
     holderProps.ref = this.createHolderRef;
 
     wrapperProps.style = wrapperStyle;
@@ -337,19 +397,26 @@ export default class Sticky<WrapperProps, HoldrerProps> extends Component<Props<
 
 // some helpers
 
-function getRect(el) {
-  if (el && typeof(el.getBoundingClientRect) === 'function') {
+function getRect(el): Rect {
+  if (el && typeof (el.getBoundingClientRect) === 'function') {
     return el.getBoundingClientRect();
   }
 
   if (el === window || el === document) {
-    return {top: 0, left: 0, bottom: window.innerHeight, height: window.innerHeight, width: window.innerWidth, right: window.innerWidth};
+    return {
+      top: 0,
+      left: 0,
+      bottom: window.innerHeight,
+      height: window.innerHeight,
+      width: window.innerWidth,
+      right: window.innerWidth
+    };
   }
 
-  return {top: 0, left: 0, right: 0, bottom: 0, width: 0, height: 0};
+  return { top: 0, left: 0, right: 0, bottom: 0, width: 0, height: 0 };
 }
 
-function instersect(r1, r2, topOffset, bottomOffset) {
+function intersect(r1, r2, topOffset, bottomOffset) {
   const r1Top = r1.top + topOffset,
     r1Bottom = r1.bottom + bottomOffset;
 
@@ -365,7 +432,7 @@ function instersect(r1, r2, topOffset, bottomOffset) {
  * @return {Object}           cloned and sanitized props
  */
 function sanitizeProps(props, toRemove) {
-  props = {...props};
+  props = { ...props };
   for (let i = 0, l = toRemove.length; i < l; i += 1) {
     delete props[toRemove[i]]
   }

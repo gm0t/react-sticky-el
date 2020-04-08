@@ -3,8 +3,6 @@ import { stub } from 'sinon';
 import { randomString } from '../utils';
 import find from '../../src/helpers/find';
 
-
-
 describe('helpers/find', function() {
   beforeEach(() => {
     stub(document, 'getElementById');

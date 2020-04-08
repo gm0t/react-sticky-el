@@ -3,7 +3,7 @@ react-sticky-el
 Sticky library for React.
 
 #### Demos
-  - [Basic](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html)
+  - [Basic](http://rawgit.com/gm0t/react-sticky-el/master/storybook-static/index.html)
 
 ## Installation
 ```sh
@@ -75,20 +75,6 @@ Allows you to disable sticking by setting this prop to `true`
 
 This handler will be called right before changing `fixed` state.
 
-#### wrapperCmp _(default: 'div')_
-
-Anything that can be used by React.createElement. Used for `wrapper element`.
-If you want to use some custom component, please be sure that you don't lose `style` and `className` props.
-
-#### holderCmp _(default: 'div')_
-
-Anything that can be used by `React.createElement`. Used for `holder element`.
-If you want to use some custom component, please be sure that you don't lose `style` and `className` props.
-
-#### holderProps _(default: {})_
-
-These props will be used to create `holderElement`.
-
 #### boundaryElement _(default: null)_
 
 Selector to define a `boundaryElement`.
@@ -109,9 +95,8 @@ app.jsx
 ```js
 import React, {Component} from 'react';
 import Sticky from 'react-sticky-el';
-...
 
-class App extends Component ({
+class App extends Component {
   render() {
     return (
       <div>
@@ -124,8 +109,8 @@ class App extends Component ({
         <p>....</p>
       </div>
     );
-  },
-});
+  }
+}
 
 ```
 
@@ -150,11 +135,11 @@ You can also specify a class name to be applied when the element becomes sticky:
 
 app.jsx
 ```js
-  ...
+
   <Sticky stickyClassName={customClassName}>
     <header />
   </Sticky>
-  ...
+
 ```
 
 #### topOffset _(default: 0)_
@@ -162,11 +147,11 @@ Sticky state will be triggered when the top of the element is `topOffset` pixels
 
 app.jsx
 ```js
-  ...
+
   <Sticky topOffset={80}>
     <SomeChild />
   </Sticky>
-  ...
+
 ```
 
 Look at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example
@@ -176,11 +161,11 @@ Sticky state will be triggered when the bottom of the element is `bottomOffset` 
 
 app.jsx
 ```js
-  ...
+
   <Sticky bottomOffset={80}>
     <SomeChild />
   </Sticky>
-  ...
+
 ```
 
 Look at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example
@@ -190,7 +175,7 @@ If `false` then boundaryEl should have position: relative. In this case sticky e
 <br />
 ```js
   import Sticky from 'react-sticky-el';
-  ...
+  
   <div className = "block"  >
 
     <Sticky boundaryElement=".block" style = {{position: 'relative'}} hideOnBoundaryHit={false}>
@@ -198,7 +183,7 @@ If `false` then boundaryEl should have position: relative. In this case sticky e
 
     </Sticky>
   </div>
-  ...
+
 ```
 
 Look at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example.
@@ -207,5 +192,48 @@ Look at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/exam
 All other props (such as className, style, etc..) will be applyed to the `holder` element.
 
 
-### License
+## Advanced usage
+
+If you want to use some custom components and have more control, then you can use `RenderPropSticky`:
+
+```js
+import { RenderPropSticky } from 'react-sticky-el';
+
+function StickyHeader() {
+  return (
+    <RenderPropSticky
+        mode={mode}
+        onFixedToggle={onFixedToggle}
+        hideOnBoundaryHit={hideOnBoundaryHit}
+        offsetTransforms={offsetTransforms}
+        disabled={disabled}
+        boundaryElement={boundaryElement}
+        scrollElement={scrollElement}
+        bottomOffset={bottomOffset}
+        topOffset={topOffset}
+        positionRecheckInterval={positionRecheckInterval}
+        noExceptionOnMissedScrollElement={noExceptionOnMissedScrollElement}
+      >
+        {({ isFixed, wrapperStyles, wrapperRef, holderStyles, holderRef }) => (
+          <div {...rest} ref={holderRef} style={holderStyles}>
+            <div
+              {...rest}
+              className={`${wrapperClassName} ${isFixed ? stickyClassName : ''}`}
+              style={
+                isFixed ? { ...wrapperStyles, ...stickyStyles } : wrapperStyles
+              }
+              ref={wrapperRef}
+            >
+              <h1>I'm sticky!</h1>
+            </div>
+          </div>
+        )}
+      </RenderPropSticky>  
+  )
+}
+
+```
+
+
+## License
 MIT
