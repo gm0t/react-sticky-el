@@ -16,8 +16,8 @@ export type CommonProps = {
   topOffset: number,
   positionRecheckInterval: number,
   noExceptionOnMissedScrollElement: boolean,
+  isIOSFixEnabled: boolean,
 }
-
 
 export type MaybeStyles = { [string]: string } | null;
 

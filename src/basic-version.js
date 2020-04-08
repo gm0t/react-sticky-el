@@ -30,6 +30,7 @@ function Sticky(props: Props) {
     positionRecheckInterval,
     noExceptionOnMissedScrollElement,
     children,
+    isIOSFixEnabled,
 
     // own props
     wrapperClassName,
@@ -52,6 +53,7 @@ function Sticky(props: Props) {
     topOffset={topOffset}
     positionRecheckInterval={positionRecheckInterval}
     noExceptionOnMissedScrollElement={noExceptionOnMissedScrollElement}
+    isIOSFixEnabled={isIOSFixEnabled}
   >
     {({ isFixed, wrapperStyles, wrapperRef, holderStyles, holderRef }) => (
       <div {...rest} ref={holderRef} style={holderStyles}>
