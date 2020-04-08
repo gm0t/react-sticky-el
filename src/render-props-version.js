@@ -81,6 +81,10 @@ class Sticky extends Component<RenderProps, State> {
     topOffset: 0,
     bottomOffset: 0,
     isIOSFixEnabled: true,
+    disabled: false,
+    onFixedToggle: null,
+    boundaryElement: null,
+    scrollElement: window
   };
 
   holderEl: HTMLElement | null = null;
@@ -214,7 +218,6 @@ class Sticky extends Component<RenderProps, State> {
       return false
     }
 
-
     if (boundaryRect && !isIntersecting(boundaryRect, scrollRect, topOffset, bottomOffset)) {
       return false
     }
@@ -288,13 +291,18 @@ class Sticky extends Component<RenderProps, State> {
     }
   }
 
-  componentDidUpdate({ scrollElement, boundaryElement }: RenderProps) {
+  componentDidUpdate({ scrollElement, boundaryElement, disabled }: RenderProps) {
     if (scrollElement !== this.props.scrollElement) {
       this.updateScrollEl();
     }
 
     if (boundaryElement !== this.props.boundaryElement) {
       this.updateBoundaryEl();
+    }
+
+    if (disabled !== this.props.disabled) {
+      this.disabled = this.props.disabled;
+      this.checkPosition();
     }
   }
 

@@ -7,7 +7,7 @@ import StickyRenderProp from './render-props-version';
 
 type Props = {
   ...CommonProps,
-  stickyStyles: MaybeStyles,
+  stickyStyle: MaybeStyles,
   stickyClassName: string,
   children: Node,
   wrapperClassName: string,
@@ -35,7 +35,7 @@ function Sticky(props: Props) {
     // own props
     wrapperClassName,
     stickyClassName,
-    stickyStyles,
+    stickyStyle,
 
     // rest of the props that we will forward to wrapper
     ...rest
@@ -62,7 +62,7 @@ function Sticky(props: Props) {
           className={`${wrapperClassName} ${isFixed ? stickyClassName : ''}`}
           style={
             // $FlowFixMe - flow does not like when we merge 2 inexact objects
-            isFixed ? { ...wrapperStyles, ...stickyStyles } : wrapperStyles
+            isFixed ? { ...wrapperStyles, ...stickyStyle } : wrapperStyles
           }
           ref={wrapperRef}
         >
@@ -76,7 +76,7 @@ function Sticky(props: Props) {
 Sticky.defaultProps = {
   stickyClassName: 'sticky',
   wrapperClassName: '',
-  stickyStyles: {}
+  stickyStyle: {}
 };
 
 export default Sticky;
