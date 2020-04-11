@@ -84,7 +84,7 @@ class Sticky extends Component<RenderProps, State> {
     disabled: false,
     onFixedToggle: null,
     boundaryElement: null,
-    scrollElement: window
+    scrollElement: 'window'
   };
 
   holderEl: HTMLElement | null = null;
