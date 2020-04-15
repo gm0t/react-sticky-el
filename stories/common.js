@@ -1,16 +1,23 @@
-import React from "react";
+// @flow
+
+import React, { type Node } from "react";
 import Sticky from "../src";
 
 import './examples.scss';
 import { action } from '@storybook/addon-actions';
 
 
-export const Block = (props) => {
+export const Block = (props: { noHeader?: boolean, noFooter?: boolean, ... }) => {
   return (
     <div className="block">
-      <Sticky boundaryElement=".block" scrollElement=".scroll-area" {...props} onFixedToggle={action('onFixedToggle')}>
-        <h2 className="header">Header</h2>
-      </Sticky>
+      {
+        props.noHeader ? null : (
+          <Sticky boundaryElement=".block" scrollElement=".scroll-area" {...props}
+                  onFixedToggle={action('onFixedToggle')}>
+            <h2 className="header">Header</h2>
+          </Sticky>
+        )
+      }
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sodales ullamcorper vehicula. Duis placerat
         quam porta lorem lobortis, sit amet sodales mauris finibus. Donec posuere diam at volutpat viverra. Cras
@@ -30,12 +37,17 @@ export const Block = (props) => {
         velit. Curabitur eget tincidunt elit. Nam et ligula finibus, eleifend velit et, commodo quam. Praesent non
         libero velit.
       </p>
-      <Sticky mode="bottom" boundaryElement=".block" scrollElement=".scroll-area" {...props} onFixedToggle={action('onFixedToggle')}>
-        <h2 className="footer">Footer</h2>
-      </Sticky>
+      {
+        props.noFooter ? null : (
+          <Sticky mode="bottom" boundaryElement=".block" scrollElement=".scroll-area" {...props}
+                  onFixedToggle={action('onFixedToggle')}>
+            <h2 className="footer">Footer</h2>
+          </Sticky>
+        )
+      }
     </div>
   );
-}
+};
 
 export const createBlocks = (disabled, topOffset, bottomOffset, hideOnBoundaryHit = true) => {
   let blocks = [];
@@ -47,13 +59,16 @@ export const createBlocks = (disabled, topOffset, bottomOffset, hideOnBoundaryHi
         topOffset={topOffset}
         bottomOffset={bottomOffset}
         hideOnBoundaryHit={hideOnBoundaryHit}
-      />
-    );
+      />,
+      <div key={`space-${i}`} className="reserved-space">--/--</div>
+    )
   }
+  // remove the last item
+  blocks.pop();
   return blocks;
-}
+};
 
-export const Wrapper = ({ children }) => (
+export const Wrapper = ({ children }: { children: Node }) => (
   <div className="page">
     {children}
   </div>

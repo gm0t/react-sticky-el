@@ -51,13 +51,9 @@ h1, h2 {
 
 .block {
   max-width: 400px;
-  margin-bottom: 50px;
   overflow: hidden;
   position: relative;
 
-  &:last-child {
-    margin-bottom: 0px;
-  }
   .sticky {
     z-index: 2;
   }
@@ -76,5 +72,15 @@ h1, h2 {
     font-size: 1.5em;
     margin: 0;
     background: #BEC6D7;
+  }
+}
+
+.reserved-space {
+  background: lightgray;
+  text-align: center;
+  padding: 30px 0;
+
+  &.huge {
+    padding: 100vh 0;
   }
 }

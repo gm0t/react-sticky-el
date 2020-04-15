@@ -128,11 +128,10 @@ class Sticky extends Component<RenderProps, State> {
       disabled
     } = this;
 
-    if (!scrollEl || !holderEl || !wrapperEl || !boundaryEl) {
+    if (!scrollEl || !holderEl || !wrapperEl) {
       console.error("Missing required elements:", {
         scrollEl,
         holderEl,
-        boundaryEl,
         wrapperEl
       });
       return;

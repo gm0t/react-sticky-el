@@ -77,10 +77,12 @@ This handler will be called right before changing `fixed` state.
 
 #### boundaryElement _(default: null)_
 
-Selector to define a `boundaryElement`.
+Selector to define a `boundaryElement`.  
 It should be one of the parents of the current element.
 
-Look at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example.
+Look at these examples 
+- [With Boundary Element](https://rawgit.com/gm0t/react-sticky-el/master/storybook-static/index.html?path=/story/hideonboundaryhit--hide-on-boundary-hit-1) 
+- [No Boundary Element](https://rawgit.com/gm0t/react-sticky-el/master/storybook-static/index.html?path=/story/boundaryelement--no-boundary-header).
 
 #### scrollElement _(default: window)_
 
@@ -89,7 +91,7 @@ Selector to define a `scrollElement`. All position checks will be performed acco
 It should be one of the parents of the current element.
 Possible selectors: 'body', 'window', '#{id}', anything suitable for [Element.matches](https://developer.mozilla.org/ru/docs/Web/API/Element/matches).
 
-Look at the [Basic Demo](http://rawgit.com/gm0t/react-sticky-el/master/dist/examples/index.html) for an example
+Look at the [Demos](https://rawgit.com/gm0t/react-sticky-el/master/storybook-static/index.html) for an example
 
 app.jsx
 ```js
@@ -143,7 +145,7 @@ app.jsx
 ```
 
 #### topOffset _(default: 0)_
-Sticky state will be triggered when the top of the element is `topOffset` pixels from the top of the `scrollElement`. Positive numbers give the impression of a lazy sticky state, whereas negative numbers are more eager in their attachment (check .
+Sticky state will be triggered when the top of the element is `topOffset` pixels from the top of the `scrollElement`. Positive numbers give the impression of a lazy sticky state, whereas negative numbers are more eager in their attachment
 
 app.jsx
 ```js

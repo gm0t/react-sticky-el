@@ -4,7 +4,6 @@ import React, { type Node } from 'react';
 import type { CommonProps, MaybeStyles } from './types'
 import StickyRenderProp from './render-props-version';
 
-
 type Props = {
   ...CommonProps,
   stickyStyle: MaybeStyles,
