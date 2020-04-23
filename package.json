@@ -1,6 +1,6 @@
 {
   "name": "react-sticky-el",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Sticky component for React",
   "browserslist": "> 0.25%, not dead",
   "main": "lib/index.js",

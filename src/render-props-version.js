@@ -84,7 +84,8 @@ class Sticky extends Component<RenderProps, State> {
     disabled: false,
     onFixedToggle: null,
     boundaryElement: null,
-    scrollElement: 'window'
+    scrollElement: 'window',
+    dontUpdateHolderHeightWhenSticky: false,
   };
 
   holderEl: HTMLElement | null = null;
@@ -96,6 +97,7 @@ class Sticky extends Component<RenderProps, State> {
 
   disabled: boolean = false;
   checkPositionIntervalId: IntervalID;
+  lastMinHeight: number;
 
   state: State = {
     isFixed: false,
@@ -142,6 +144,7 @@ class Sticky extends Component<RenderProps, State> {
       onFixedToggle,
       offsetTransforms,
       isIOSFixEnabled,
+      dontUpdateHolderHeightWhenSticky
     } = this.props;
 
     if (disabled) {
@@ -170,6 +173,9 @@ class Sticky extends Component<RenderProps, State> {
       }
     }
 
+    const minHeight = this.state.isFixed && dontUpdateHolderHeightWhenSticky && this.lastMinHeight ? this.lastMinHeight : wrapperRect.height;
+    this.lastMinHeight = minHeight;
+
     // To ensure that this component becomes sticky immediately on mobile devices instead
     // of disappearing until the scroll event completes, we add `transform: translateZ(0)`
     // to 'kick' rendering of this element to the GPU
@@ -182,7 +188,7 @@ class Sticky extends Component<RenderProps, State> {
     const newState: State = {
       isFixed,
       height: wrapperRect.height,
-      holderStyles: { minHeight: `${wrapperRect.height}px` },
+      holderStyles: { minHeight: `${minHeight}px` },
       wrapperStyles: isFixed ? {
         ...iosRenderingFixStyles,
         ...buildStickyStyle(mode, this.props, {

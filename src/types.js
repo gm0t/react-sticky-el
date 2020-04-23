@@ -15,7 +15,7 @@ export type CommonProps = {
   bottomOffset: number,
   topOffset: number,
   positionRecheckInterval: number,
-  noExceptionOnMissedScrollElement: boolean,
+  dontUpdateHolderHeightWhenSticky: boolean,
   isIOSFixEnabled: boolean,
 }
 

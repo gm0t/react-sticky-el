@@ -80,7 +80,35 @@ h1, h2 {
   text-align: center;
   padding: 30px 0;
 
+  p {
+    padding: 0 10px;
+  }
+
   &.huge {
     padding: 100vh 0;
   }
+}
+
+
+.navigation a {
+  display: block;
+  padding: 0.5rem;
+}
+
+.header {
+  padding: 1rem;
+  background: #577796;
+}
+
+.sticky .header {
+  padding: 0.5rem;
+}
+
+.sticky .header h2 {
+  text-align: left;
+  font-size: 1rem;
+}
+
+.sticky .header h3 {
+  display: none;
 }
