@@ -26,10 +26,17 @@ const buildTopStyles = (container, props): StickyStyles => {
   const { bottomOffset, hideOnBoundaryHit } = props;
   const { top, height, width, boundaryBottom } = container;
 
+  // above boundary
   if (hideOnBoundaryHit || (top + height + bottomOffset < boundaryBottom)) {
     return { top: `${top}px`, width: `${width}px`, position: 'fixed' };
   }
 
+  // reaching boundary
+  if (!hideOnBoundaryHit && boundaryBottom > 0) {
+    return { top: `${boundaryBottom - (top + height + bottomOffset)}px`, width: `${width}px`, position: 'fixed' };
+  }
+
+  // below boundary
   return { width: `${width}px`, bottom: `${bottomOffset}px`, position: 'absolute' };
 };
 
