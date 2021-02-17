@@ -223,7 +223,7 @@ class Sticky extends Component<RenderProps, State> {
       return false
     }
 
-    if (boundaryRect && !isIntersecting(boundaryRect, scrollRect, topOffset, bottomOffset)) {
+    if (hideOnBoundaryHit && boundaryRect && !isIntersecting(boundaryRect, scrollRect, topOffset, bottomOffset)) {
       return false
     }
 
