@@ -173,22 +173,21 @@ app.jsx
 Look at the [Basic Demo](https://rawgit.com/gm0t/react-sticky-el/master/storybook-static/index.html?path=/story/offsets--bottom-offset) for an example
 
 #### hideOnBoundaryHit _(default: true)_
-If `false` then boundaryEl should have position: relative. In this case sticky element won't disappear on reaching it's boundaries. A configuration like this is implemented below.
+If `false` then the sticky element won't disappear on reaching it's boundaries. A configuration like this is implemented below.
 <br />
 ```js
   import Sticky from 'react-sticky-el';
   
-  <div className = "block"  >
+  <div className="block">
 
-    <Sticky boundaryElement=".block" style = {{position: 'relative'}} hideOnBoundaryHit={false}>
-    <SomeChild />
-
+    <Sticky boundaryElement=".block" hideOnBoundaryHit={false}>
+      <SomeChild />
     </Sticky>
   </div>
-
 ```
-
 Look at the [Basic Demo](https://rawgit.com/gm0t/react-sticky-el/master/storybook-static/index.html) for an example.
+
+Note: If the `scrollareaElement` is not at the top of the viewport, when the sticky element overflows it, it will stay visible. This can not be fixed with `overflow: hidden` because the sticky element has `position: fixed` and it's relative to the viewport. A solution is to use `clip-path: inset(0 0 0 0);` on the `scrollareaElement`. **This may have unforeseen consequences with other styles in your app - use caution**. You can see this happening in [this example](https://rawgit.com/gm0t/react-sticky-el/master/storybook-static/index.html?path=/story/hideonboundaryhit--hide-on-boundary-hit-4)
 
 #### dontUpdateHolderHeightWhenSticky _(default: false)_
 
@@ -198,7 +197,7 @@ Look at the [Demo](https://rawgit.com/gm0t/react-sticky-el/master/storybook-stat
 
 
 #### Other props
-All other props (such as className, style, etc..) will be applyed to the `holder` element.
+All other props (such as className, style, etc..) will be applied to the `holder` element.
 
 
 ## Advanced usage

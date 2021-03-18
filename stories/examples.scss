@@ -45,6 +45,11 @@ h1, h2 {
     height: 100%;
     overflow-y: scroll;
     position: relative;
+
+    &--distant {
+      margin-top: 100px;
+      border-top: 2px solid blue;
+    }
   }
 }
 
