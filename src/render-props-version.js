@@ -156,7 +156,7 @@ class Sticky extends Component<RenderProps, State> {
 
     if (disabled) {
       if (this.state.isFixed) {
-        this.setState({ isFixed: false })
+        this.setState({ isFixed: false, wrapperStyles: {} })
       }
       return
     }
