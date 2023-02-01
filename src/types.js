@@ -5,7 +5,7 @@ import type { Node } from "react";
 type FuncRef = (el: HTMLElement | null) => void;
 
 export type CommonProps = {
-  mode: 'bottom' | 'top',
+  mode: "bottom" | "top",
   onFixedToggle: (boolean) => void,
   hideOnBoundaryHit: boolean,
   offsetTransforms: boolean,
@@ -17,7 +17,8 @@ export type CommonProps = {
   positionRecheckInterval: number,
   dontUpdateHolderHeightWhenSticky: boolean,
   isIOSFixEnabled: boolean,
-}
+  windowTopOffset: number,
+};
 
 export type MaybeStyles = { [string]: string } | null;
 
@@ -27,11 +28,11 @@ export type RenderFuncArgs = {
   isFixed: boolean,
   wrapperStyles: MaybeStyles,
   holderStyles: MaybeStyles,
-}
+};
 
-export type RenderFunc = RenderFuncArgs => Node;
+export type RenderFunc = (RenderFuncArgs) => Node;
 
 export type RenderProps = {
   ...CommonProps,
-  children: RenderFunc
-}
+  children: RenderFunc,
+};

@@ -1,8 +1,8 @@
 // @flow
 
-import React, { type Node } from 'react';
-import type { CommonProps, MaybeStyles } from './types'
-import StickyRenderProp from './render-props-version';
+import React, { type Node } from "react";
+import type { CommonProps, MaybeStyles } from "./types";
+import StickyRenderProp from "./render-props-version";
 
 type Props = {
   ...CommonProps,
@@ -12,7 +12,7 @@ type Props = {
   wrapperClassName: string,
   holderProps: any,
   ...
-}
+};
 
 function Sticky(props: Props) {
   const {
@@ -30,6 +30,7 @@ function Sticky(props: Props) {
     children,
     isIOSFixEnabled,
     dontUpdateHolderHeightWhenSticky,
+    windowTopOffset,
 
     // own props
     wrapperClassName,
@@ -40,42 +41,45 @@ function Sticky(props: Props) {
     ...rest
   } = props;
 
-  return <StickyRenderProp
-    mode={mode}
-    onFixedToggle={onFixedToggle}
-    hideOnBoundaryHit={hideOnBoundaryHit}
-    offsetTransforms={offsetTransforms}
-    disabled={disabled}
-    boundaryElement={boundaryElement}
-    scrollElement={scrollElement}
-    bottomOffset={bottomOffset}
-    topOffset={topOffset}
-    positionRecheckInterval={positionRecheckInterval}
-    isIOSFixEnabled={isIOSFixEnabled}
-    dontUpdateHolderHeightWhenSticky={dontUpdateHolderHeightWhenSticky}
-  >
-    {({ isFixed, wrapperStyles, wrapperRef, holderStyles, holderRef }) => (
-      <div {...rest} ref={holderRef} style={holderStyles}>
-        <div
-          {...rest}
-          className={`${wrapperClassName} ${isFixed ? stickyClassName : ''}`}
-          style={
-            // $FlowFixMe - flow does not like when we merge 2 inexact objects
-            isFixed ? { ...wrapperStyles, ...stickyStyle } : wrapperStyles
-          }
-          ref={wrapperRef}
-        >
-          {children}
+  return (
+    <StickyRenderProp
+      mode={mode}
+      onFixedToggle={onFixedToggle}
+      hideOnBoundaryHit={hideOnBoundaryHit}
+      offsetTransforms={offsetTransforms}
+      disabled={disabled}
+      boundaryElement={boundaryElement}
+      scrollElement={scrollElement}
+      bottomOffset={bottomOffset}
+      topOffset={topOffset}
+      positionRecheckInterval={positionRecheckInterval}
+      isIOSFixEnabled={isIOSFixEnabled}
+      dontUpdateHolderHeightWhenSticky={dontUpdateHolderHeightWhenSticky}
+      windowTopOffset={windowTopOffset}
+    >
+      {({ isFixed, wrapperStyles, wrapperRef, holderStyles, holderRef }) => (
+        <div {...rest} ref={holderRef} style={holderStyles}>
+          <div
+            {...rest}
+            className={`${wrapperClassName} ${isFixed ? stickyClassName : ""}`}
+            style={
+              // $FlowFixMe - flow does not like when we merge 2 inexact objects
+              isFixed ? { ...wrapperStyles, ...stickyStyle } : wrapperStyles
+            }
+            ref={wrapperRef}
+          >
+            {children}
+          </div>
         </div>
-      </div>
-    )}
-  </StickyRenderProp>
+      )}
+    </StickyRenderProp>
+  );
 }
 
 Sticky.defaultProps = {
-  stickyClassName: 'sticky',
-  wrapperClassName: '',
-  stickyStyle: {}
+  stickyClassName: "sticky",
+  wrapperClassName: "",
+  stickyStyle: {},
 };
 
 export default Sticky;
