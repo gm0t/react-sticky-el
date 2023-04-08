@@ -6,13 +6,12 @@ import Sticky from "../src";
 import './examples.scss';
 import { action } from '@storybook/addon-actions';
 
-
 export const Block = (props: { noHeader?: boolean, noFooter?: boolean, ... }) => {
   return (
     <div className="block">
       {
         props.noHeader ? null : (
-          <Sticky boundaryElement=".block" scrollElement=".scroll-area" {...props}
+          <Sticky dontUpdateHolderHeightWhenSticky boundaryElement=".block" scrollElement=".scroll-area" {...props}
                   onFixedToggle={action('onFixedToggle')}>
             <h2 className="header">Header</h2>
           </Sticky>
@@ -39,7 +38,7 @@ export const Block = (props: { noHeader?: boolean, noFooter?: boolean, ... }) =>
       </p>
       {
         props.noFooter ? null : (
-          <Sticky mode="bottom" boundaryElement=".block" scrollElement=".scroll-area" {...props}
+          <Sticky dontUpdateHolderHeightWhenSticky mode="bottom" boundaryElement=".block" scrollElement=".scroll-area" {...props}
                   onFixedToggle={action('onFixedToggle')}>
             <h2 className="footer">Footer</h2>
           </Sticky>

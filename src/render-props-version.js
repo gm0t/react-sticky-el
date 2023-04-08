@@ -304,11 +304,11 @@ class Sticky extends Component<RenderProps, State> {
   }
 
   componentDidUpdate({ scrollElement, boundaryElement, disabled }: RenderProps) {
-    if (scrollElement !== this.props.scrollElement) {
+    if (scrollElement !== this.props.scrollElement || this.scrollEl === null) {
       this.updateScrollEl();
     }
 
-    if (boundaryElement !== this.props.boundaryElement) {
+    if (boundaryElement !== this.props.boundaryElement || this.boundaryEl === null) {
       this.updateBoundaryEl();
     }
 
