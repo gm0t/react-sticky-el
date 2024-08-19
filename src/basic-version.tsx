@@ -21,7 +21,13 @@ export interface Props extends CommonProps {
   children?: ReactNode,
 }
 
-function Sticky(props: Props) {
+export const defaultProps = {
+  ...StickyRenderProp.defaultProps,
+  stickyClassName: 'sticky',
+  wrapperClassName: '',
+  stickyStyle: {},
+};
+function Sticky(props: Partial<Props>) {
   const {
     // props for StickyRenderProp
     mode,
@@ -45,7 +51,10 @@ function Sticky(props: Props) {
 
     // rest of the props that we will forward to wrapper
     ...rest
-  } = props;
+  } = {
+    ...defaultProps,
+    ...props
+  };
 
   return <StickyRenderProp
     mode={mode}
@@ -77,12 +86,5 @@ function Sticky(props: Props) {
     )}
   </StickyRenderProp>
 }
-
-Sticky.defaultProps = {
-  ...StickyRenderProp.defaultProps,
-  stickyClassName: 'sticky',
-  wrapperClassName: '',
-  stickyStyle: {},
-};
 
 export default Sticky;

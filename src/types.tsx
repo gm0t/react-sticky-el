@@ -15,7 +15,7 @@ export interface CommonProps {
    * Callback that is called when sticky state is changed.
    * @param isFixed - `true` if element is sticky.
    */
-  onFixedToggle: (isFixed: boolean) => void,
+  onFixedToggle?: (isFixed: boolean) => void,
   /**
    * If `true` - element will be hidden when boundary reached.
    */
