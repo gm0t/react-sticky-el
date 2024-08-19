@@ -87,14 +87,14 @@ const isEqual = (obj1: State, obj2: State) => {
 
 class Sticky extends Component<RenderProps, State> {
   static defaultProps = {
-    mode: 'top',
+    mode: 'top' as const,
     topOffset: 0,
     bottomOffset: 0,
     isIOSFixEnabled: true,
     offsetTransforms: true,
     disabled: false,
-    onFixedToggle: null,
-    boundaryElement: null,
+    onFixedToggle: undefined,
+    boundaryElement: undefined,
     hideOnBoundaryHit: true,
     scrollElement: 'window',
     dontUpdateHolderHeightWhenSticky: false,

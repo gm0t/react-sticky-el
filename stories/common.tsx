@@ -2,7 +2,7 @@
 
 import React, {ReactNode} from "react";
 import Sticky from "../src";
-import {Props} from "../src/basic-version";
+import {Props, defaultProps as StickyDefaultProps} from "../src/basic-version";
 
 import './examples.scss';
 import {action} from '@storybook/addon-actions';
@@ -12,7 +12,11 @@ interface BlockProps extends Props {
   noFooter: boolean,
 }
 
-export const Block = ({noHeader, noFooter, ...rest}: BlockProps) => {
+export const Block = (props: Partial<BlockProps>) => {
+  const {noHeader, noFooter, ...rest} = {
+    ...defaultProps,
+    ...props
+  };
   return (
     <div className="block">
       {
@@ -56,15 +60,15 @@ export const Block = ({noHeader, noFooter, ...rest}: BlockProps) => {
   );
 };
 
-Block.defaultProps = {
-  ...Sticky.defaultProps,
-  mode: 'top',
+const defaultProps = {
+  ...StickyDefaultProps,
+  mode: 'top' as const,
   topOffset: 0,
   bottomOffset: 0,
   isIOSFixEnabled: true,
   offsetTransforms: true,
   disabled: false,
-  onFixedToggle: null,
+  onFixedToggle: undefined,
   noHeader: false,
   noFooter: false,
   dontUpdateHolderHeightWhenSticky: true,
