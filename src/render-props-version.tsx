@@ -1,7 +1,7 @@
 // @flow strict
 
-import type {RenderProps, StickyMode} from "./types";
-import {Component, CSSProperties} from "react";
+import type { RenderProps, StickyMode } from "./types";
+import { Component, CSSProperties } from "react";
 import { listen, unlisten } from "./helpers/events";
 import find from "./helpers/find";
 import getClosestTransformedParent from "./helpers/getClosestTransformedParent";
@@ -24,7 +24,7 @@ type ContainerRect = {
   boundaryBottom: number,
 }
 
-const buildTopStyles = (container:ContainerRect, props: RenderProps): CSSProperties => {
+const buildTopStyles = (container: ContainerRect, props: RenderProps): CSSProperties => {
   const { bottomOffset, hideOnBoundaryHit } = props;
   const { top, height, width, boundaryBottom } = container;
 
@@ -129,8 +129,6 @@ class Sticky extends Component<RenderProps, State> {
       return;
     }
     this.wrapperEl = wrapperEl;
-    this.updateScrollEl();
-    this.updateBoundaryEl();
   };
 
   checkPosition = () => {
@@ -256,7 +254,7 @@ class Sticky extends Component<RenderProps, State> {
     }
 
     if (this.scrollEl) {
-      unlisten(this.scrollEl, [ 'scroll' ], this.checkPosition);
+      unlisten(this.scrollEl, ['scroll'], this.checkPosition);
       this.scrollEl = null;
     }
 
@@ -269,7 +267,7 @@ class Sticky extends Component<RenderProps, State> {
     }
 
     if (this.scrollEl) {
-      listen(this.scrollEl, [ 'scroll' ], this.checkPosition)
+      listen(this.scrollEl, ['scroll'], this.checkPosition)
     } else {
       console.error('Cannot find scrollElement ' + (typeof scrollElement === 'string' ? scrollElement : 'unknown'));
     }
@@ -291,6 +289,8 @@ class Sticky extends Component<RenderProps, State> {
   }
 
   initialize() {
+    this.updateScrollEl();
+    this.updateBoundaryEl();
     const {
       positionRecheckInterval,
       disabled
@@ -299,7 +299,7 @@ class Sticky extends Component<RenderProps, State> {
     this.disabled = disabled;
 
     // we should always listen to window events because they will affect the layout of the whole page
-    listen(window, [ 'scroll', 'resize', 'pageshow', 'load' ], this.checkPosition);
+    listen(window, ['scroll', 'resize', 'pageshow', 'load'], this.checkPosition);
 
     this.checkPosition();
 
@@ -332,9 +332,9 @@ class Sticky extends Component<RenderProps, State> {
 
   componentWillUnmount() {
     if (this.scrollEl) {
-      unlisten(this.scrollEl, [ 'scroll' ], this.checkPosition);
+      unlisten(this.scrollEl, ['scroll'], this.checkPosition);
     }
-    unlisten(window, [ 'scroll', 'resize', 'pageshow', 'load' ], this.checkPosition);
+    unlisten(window, ['scroll', 'resize', 'pageshow', 'load'], this.checkPosition);
     this.boundaryEl = null;
     this.scrollEl = null;
     if (this.checkPositionIntervalId) {
